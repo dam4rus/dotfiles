@@ -20,7 +20,7 @@ Plug 'edolphin-ydf/goimpl.nvim'
 Plug 'simrat39/rust-tools.nvim'
 Plug 'meain/vim-jsontogo'
 Plug 'numToStr/Comment.nvim'
-Plug 'aspeddro/gitui.nvim'
+Plug 'airblade/vim-gitgutter'
 call plug#end()
 
 colorscheme pablo
