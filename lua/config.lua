@@ -123,8 +123,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
     local goreftool = require('go.reftool')
     vim.keymap.set('n', '<leader>ie', goiferr.run, {})
     vim.keymap.set('n', '<leader>is', goreftool.fillstruct, {})
-    
-    builtin.lsp_references()
+
     vim.keymap.set("n", "<leader>fr", builtin.lsp_references, {})
     vim.keymap.set("n", "<leader>fi", builtin.lsp_implementations, {})
     vim.keymap.set("n", "<leader>fd", builtin.lsp_document_symbols, {})
