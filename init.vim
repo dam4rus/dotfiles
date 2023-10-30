@@ -23,4 +23,9 @@ Plug 'numToStr/Comment.nvim'
 Plug 'aspeddro/gitui.nvim'
 call plug#end()
 
+colorscheme pablo
+set listchars+=leadmultispace:>···
+set list
+set tabstop=4
+set shiftwidth=4
 lua require('config')

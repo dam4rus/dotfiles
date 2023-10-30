@@ -67,9 +67,21 @@ require("go").setup({
 	disable_defaults = false,
 	gofmt = "gofmt"
 })
-require("go.format").goimport()
-
 require("rust-tools").setup()
+
+-- Run gofmt + goimport on save
+local format_sync_grp = vim.api.nvim_create_augroup("GoImport", {})
+vim.api.nvim_create_autocmd("BufWritePre", {
+  pattern = "*.go",
+  callback = function()
+   require('go.format').goimport()
+  end,
+  group = format_sync_grp,
+})
+
+
+
+local builtin = require("telescope.builtin")
 
 -- Global mappings.
 -- See `:help vim.diagnostic.*` for documentation on any of the below functions
@@ -97,33 +109,33 @@ vim.api.nvim_create_autocmd('LspAttach', {
     vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder, opts)
     vim.keymap.set('n', '<space>wr', vim.lsp.buf.remove_workspace_folder, opts)
     vim.keymap.set('n', '<space>wl', function()
-      print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+        print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
     end, opts)
     vim.keymap.set('n', '<space>D', vim.lsp.buf.type_definition, opts)
     vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename, opts)
     vim.keymap.set({ 'n', 'v' }, '<space>ca', vim.lsp.buf.code_action, opts)
     vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
     vim.keymap.set('n', '<space>f', function()
-      vim.lsp.buf.format { async = true }
+        vim.lsp.buf.format { async = true }
     end, opts)
     vim.keymap.set('n', '<leader>im', [[<cmd>lua require'telescope'.extensions.goimpl.goimpl{}<CR>]], {noremap=true, silent=true})
     local goiferr = require("go.iferr")
     local goreftool = require('go.reftool')
     vim.keymap.set('n', '<leader>ie', goiferr.run, {})
     vim.keymap.set('n', '<leader>is', goreftool.fillstruct, {})
+    
+    builtin.lsp_references()
+    vim.keymap.set("n", "<leader>fr", builtin.lsp_references, {})
+    vim.keymap.set("n", "<leader>fi", builtin.lsp_implementations, {})
+    vim.keymap.set("n", "<leader>fd", builtin.lsp_document_symbols, {})
+    vim.keymap.set("n", "<leader>fw", builtin.lsp_dynamic_workspace_symbols, {})
   end,
 })
 
-local builtin = require("telescope.builtin")
-builtin.lsp_references()
-vim.keymap.set("n", "<leader>fr", builtin.lsp_references, {})
-vim.keymap.set("n", "<leader>fi", builtin.lsp_implementations, {})
-vim.keymap.set("n", "<leader>fd", builtin.lsp_document_symbols, {})
-vim.keymap.set("n", "<leader>fw", builtin.lsp_dynamic_workspace_symbols, {})
 vim.keymap.set('n', '<leader>ff', builtin.find_files, {})
 vim.keymap.set('n', '<leader>fg', builtin.live_grep, {})
 vim.keymap.set('n', '<leader>fb', builtin.buffers, {})
 vim.keymap.set('n', '<leader>fh', builtin.help_tags, {})
 
 require('Comment').setup()
-require("gitui").setup()
+
