@@ -23,7 +23,7 @@ Plug 'numToStr/Comment.nvim'
 Plug 'airblade/vim-gitgutter'
 call plug#end()
 
-colorscheme pablo
+colorscheme torte
 set listchars+=leadmultispace:>···
 set list
 set tabstop=4
