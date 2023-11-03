@@ -81,6 +81,11 @@ vim.api.nvim_create_autocmd("BufWritePre", {
   group = format_sync_grp,
 })
 
+require("telescope").setup({
+	defaults = {
+		layout_strategy = "vertical"
+	}
+})
 local builtin = require("telescope.builtin")
 
 -- Global mappings.
@@ -184,7 +189,7 @@ galaxyline.section.left[1] = {
     icon = fileinfo.get_file_icon,
     highlight = { colors.green, colors.bg },
     separator = "",
-    separator_highlight = { colors.magenta, colors.darkblue },
+    separator_highlight = { colors.bg, colors.cyan },
   }
 }
 galaxyline.section.left[2] = {
@@ -192,9 +197,9 @@ galaxyline.section.left[2] = {
     provider = vcs.get_git_branch,
     condition = condition.check_git_workspace,
     icon = "  ",
-    highlight = { colors.purple,  colors.darkblue },
-    separator = "  ",
-    separator_highlight = { colors.magenta, colors.darkblue },
+    highlight = { colors.fg, colors.cyan },
+    separator = "",
+    separator_highlight = { colors.cyan, colors.darkblue },
   }
 }
 galaxyline.section.left[3] = {
@@ -214,9 +219,9 @@ galaxyline.section.left[4] = {
 galaxyline.section.right[1] = {
 	LineColumn = {
 		provider = fileinfo.line_column,
-		highlight = { colors.fg, colors.darkblue },
-		separator = "  ",
-		separator_highlight = { colors.magenta, colors.darkblue },
+		highlight = { colors.fg, colors.bg },
+		separator = "",
+		separator_highlight = { colors.bg, colors.darkblue },
 	}
 }
 

@@ -36,3 +36,7 @@ set tabstop=4
 set shiftwidth=4
 set number
 lua require('config')
+
+aunmenu PopUp.How-to\ disable\ mouse
+menu PopUp.Find\ References <leader>fr
+menu PopUp.Find\ Implementations <leader>fi
