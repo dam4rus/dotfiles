@@ -1,3 +1,5 @@
+require('lspconfig').lua_ls.setup({})
+
 local cmp = require('cmp')
 
 cmp.setup({
@@ -79,8 +81,6 @@ vim.api.nvim_create_autocmd("BufWritePre", {
   group = format_sync_grp,
 })
 
-
-
 local builtin = require("telescope.builtin")
 
 -- Global mappings.
@@ -137,4 +137,89 @@ vim.keymap.set('n', '<leader>fb', builtin.buffers, {})
 vim.keymap.set('n', '<leader>fh', builtin.help_tags, {})
 
 require('Comment').setup()
+require('gitui').setup()
 
+-- disable netrw at the very start of your init.lua
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+
+-- set termguicolors to enable highlight groups
+vim.opt.termguicolors = true
+
+-- empty setup using defaults
+require("nvim-tree").setup()
+
+-- OR setup with some options
+require("nvim-tree").setup({
+  sort_by = "case_sensitive",
+  view = {
+    width = 30,
+  },
+  renderer = {
+    group_empty = true,
+  },
+  filters = {
+    dotfiles = true,
+  },
+})
+
+require('tabline').setup({
+	show_index = false,
+	show_icon = true,
+	modify_indicator = " 󰙏",
+})
+
+local galaxyline = require("galaxyline")
+local fileinfo = require("galaxyline.providers.fileinfo")
+local vcs = require('galaxyline.providers.vcs')
+local colors = require("galaxyline.themes.colors").default
+local diagnostic = require("galaxyline.providers.diagnostic")
+local condition = require("galaxyline.condition")
+galaxyline.section.left[1] = {
+  FileName = {
+    provider = fileinfo.get_current_file_name,
+    condition = function()
+      return vim.fn.empty(vim.fn.expand("%:t")) ~= 1
+    end,
+    icon = fileinfo.get_file_icon,
+    highlight = { colors.green, colors.bg },
+    separator = "",
+    separator_highlight = { colors.magenta, colors.darkblue },
+  }
+}
+galaxyline.section.left[2] = {
+  GitBranch = {
+    provider = vcs.get_git_branch,
+    condition = condition.check_git_workspace,
+    icon = "  ",
+    highlight = { colors.purple,  colors.darkblue },
+    separator = "  ",
+    separator_highlight = { colors.magenta, colors.darkblue },
+  }
+}
+galaxyline.section.left[3] = {
+  DiagnosticError = {
+    provider = diagnostic.get_diagnostic_error,
+    icon = "  ",
+    highlight = { colors.red, colors.darkblue },
+  }
+}
+galaxyline.section.left[4] = {
+  DiagnosticWarning = {
+    provider = diagnostic.get_diagnostic_warn,
+    icon = "  ",
+    highlight = { colors.yellow, colors.darkblue },
+  }
+}
+galaxyline.section.right[1] = {
+	LineColumn = {
+		provider = fileinfo.line_column,
+		highlight = { colors.fg, colors.darkblue },
+		separator = "  ",
+		separator_highlight = { colors.magenta, colors.darkblue },
+	}
+}
+
+vim.api.nvim_set_hl(0, "TabLineFill", { bg=colors.darkblue })
+vim.api.nvim_set_hl(0, "TabLineSel", { fg=colors.green, ctermbg=bg })
+vim.api.nvim_set_hl(0, "TabLine", { fg=colors.fg, bg=colors.bg })

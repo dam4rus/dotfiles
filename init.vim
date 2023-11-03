@@ -9,8 +9,10 @@ Plug 'hrsh7th/cmp-vsnip'
 Plug 'hrsh7th/vim-vsnip'
 Plug 'neovim/nvim-lspconfig'
 Plug 'ray-x/go.nvim'
-Plug 'ray-x/guihua.lua'  
-Plug 'preservim/nerdtree'
+Plug 'ray-x/guihua.lua'
+" Plug 'preservim/nerdtree'
+Plug 'nvim-tree/nvim-web-devicons'
+Plug 'nvim-tree/nvim-tree.lua'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'nvim-lua/plenary.nvim'
@@ -20,7 +22,11 @@ Plug 'edolphin-ydf/goimpl.nvim'
 Plug 'simrat39/rust-tools.nvim'
 Plug 'meain/vim-jsontogo'
 Plug 'numToStr/Comment.nvim'
+Plug 'aspeddro/gitui.nvim'
 Plug 'airblade/vim-gitgutter'
+Plug 'NTBBloodbath/galaxyline.nvim'
+Plug 'crispgm/nvim-tabline'
+Plug 'RRethy/vim-illuminate'
 call plug#end()
 
 colorscheme torte
@@ -28,4 +34,5 @@ set listchars+=leadmultispace:>···
 set list
 set tabstop=4
 set shiftwidth=4
+set number
 lua require('config')
