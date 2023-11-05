@@ -35,6 +35,7 @@ set list
 set tabstop=4
 set shiftwidth=4
 set number
+set scroll=4
 lua require('config')
 
 aunmenu PopUp.How-to\ disable\ mouse

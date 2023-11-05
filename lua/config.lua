@@ -1,3 +1,7 @@
+vim.keymap.set({'n', 'v'}, '<leader>y', '"+y')
+vim.keymap.set({'n', 'v'}, '<leader>p', '"+p')
+vim.keymap.set({'n', 'v'}, '<leader>P', '"+P')
+
 require('lspconfig').lua_ls.setup({})
 
 local cmp = require('cmp')
@@ -188,31 +192,29 @@ galaxyline.section.left[1] = {
     end,
     icon = fileinfo.get_file_icon,
     highlight = { colors.green, colors.bg },
-    separator = "",
-    separator_highlight = { colors.bg, colors.cyan },
   }
 }
 galaxyline.section.left[2] = {
   GitBranch = {
     provider = vcs.get_git_branch,
     condition = condition.check_git_workspace,
-    icon = "  ",
+    icon = "   ",
     highlight = { colors.fg, colors.cyan },
-    separator = "",
-    separator_highlight = { colors.cyan, colors.darkblue },
+	separator = " ",
+	separator_highlight = { colors.cyan, colors.cyan },
   }
 }
 galaxyline.section.left[3] = {
   DiagnosticError = {
     provider = diagnostic.get_diagnostic_error,
-    icon = "  ",
+    icon = "   ",
     highlight = { colors.red, colors.darkblue },
   }
 }
 galaxyline.section.left[4] = {
   DiagnosticWarning = {
     provider = diagnostic.get_diagnostic_warn,
-    icon = "  ",
+    icon = "   ",
     highlight = { colors.yellow, colors.darkblue },
   }
 }
@@ -220,8 +222,6 @@ galaxyline.section.right[1] = {
 	LineColumn = {
 		provider = fileinfo.line_column,
 		highlight = { colors.fg, colors.bg },
-		separator = "",
-		separator_highlight = { colors.bg, colors.darkblue },
 	}
 }
 
