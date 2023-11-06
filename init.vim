@@ -27,17 +27,19 @@ Plug 'airblade/vim-gitgutter'
 Plug 'NTBBloodbath/galaxyline.nvim'
 Plug 'crispgm/nvim-tabline'
 Plug 'RRethy/vim-illuminate'
+Plug 'martinsione/darkplus.nvim'
 call plug#end()
 
-colorscheme torte
+colorscheme darkplus
+lua require('config')
 set listchars+=leadmultispace:>···
 set list
 set tabstop=4
 set shiftwidth=4
 set number
 set scroll=4
-lua require('config')
 
-aunmenu PopUp.How-to\ disable\ mouse
+" aunmenu PopUp.How-to\ disable\ mouse
+menu PopUp.-2- <Nop>
 menu PopUp.Find\ References <leader>fr
 menu PopUp.Find\ Implementations <leader>fi

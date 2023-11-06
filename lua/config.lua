@@ -181,9 +181,9 @@ require('tabline').setup({
 local galaxyline = require("galaxyline")
 local fileinfo = require("galaxyline.providers.fileinfo")
 local vcs = require('galaxyline.providers.vcs')
-local colors = require("galaxyline.themes.colors").default
 local diagnostic = require("galaxyline.providers.diagnostic")
 local condition = require("galaxyline.condition")
+local colors = require('darkplus.colors')
 galaxyline.section.left[1] = {
   FileName = {
     provider = fileinfo.get_current_file_name,
@@ -191,7 +191,7 @@ galaxyline.section.left[1] = {
       return vim.fn.empty(vim.fn.expand("%:t")) ~= 1
     end,
     icon = fileinfo.get_file_icon,
-    highlight = { colors.green, colors.bg },
+    highlight = { colors.green, colors.dark },
   }
 }
 galaxyline.section.left[2] = {
@@ -199,32 +199,33 @@ galaxyline.section.left[2] = {
     provider = vcs.get_git_branch,
     condition = condition.check_git_workspace,
     icon = "   ",
-    highlight = { colors.fg, colors.cyan },
+    highlight = { colors.fg, colors.magenta },
 	separator = " ",
-	separator_highlight = { colors.cyan, colors.cyan },
+	separator_highlight = { colors.magenta, colors.magenta },
   }
 }
 galaxyline.section.left[3] = {
   DiagnosticError = {
     provider = diagnostic.get_diagnostic_error,
     icon = "   ",
-    highlight = { colors.red, colors.darkblue },
+    highlight = { colors.error_red, colors.bg },
   }
 }
 galaxyline.section.left[4] = {
   DiagnosticWarning = {
     provider = diagnostic.get_diagnostic_warn,
     icon = "   ",
-    highlight = { colors.yellow, colors.darkblue },
+    highlight = { colors.warning_orange, colors.bg },
   }
 }
 galaxyline.section.right[1] = {
 	LineColumn = {
 		provider = fileinfo.line_column,
-		highlight = { colors.fg, colors.bg },
+		highlight = { colors.fg, colors.dark },
 	}
 }
 
-vim.api.nvim_set_hl(0, "TabLineFill", { bg=colors.darkblue })
-vim.api.nvim_set_hl(0, "TabLineSel", { fg=colors.green, ctermbg=bg })
-vim.api.nvim_set_hl(0, "TabLine", { fg=colors.fg, bg=colors.bg })
+vim.api.nvim_set_hl(0, "TabLine", { fg=colors.fg, bg=colors.dark })
+vim.api.nvim_set_hl(0, "TabLineFill", { bg=colors.dark })
+vim.api.nvim_set_hl(0, "TabLineSel", { fg=colors.green, bg=colors.bg })
+
