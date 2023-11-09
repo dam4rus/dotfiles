@@ -10,7 +10,6 @@ Plug 'hrsh7th/vim-vsnip'
 Plug 'neovim/nvim-lspconfig'
 Plug 'ray-x/go.nvim'
 Plug 'ray-x/guihua.lua'
-" Plug 'preservim/nerdtree'
 Plug 'nvim-tree/nvim-web-devicons'
 Plug 'nvim-tree/nvim-tree.lua'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
@@ -28,6 +27,7 @@ Plug 'NTBBloodbath/galaxyline.nvim'
 Plug 'crispgm/nvim-tabline'
 Plug 'RRethy/vim-illuminate'
 Plug 'martinsione/darkplus.nvim'
+Plug 'akinsho/git-conflict.nvim'
 call plug#end()
 
 colorscheme darkplus
