@@ -215,7 +215,7 @@ galaxyline.section.left[1] = {
 		provider = fileinfo.get_current_file_path,
 		condition = condition.buffer_not_empty,
 		icon = fileinfo.get_file_icon,
-		highlight = { mocha.base, mocha.maroon },
+		highlight = { fileinfo.get_file_icon_color, mocha.surface0 },
 	}
 }
 galaxyline.section.left[2] = {
@@ -252,10 +252,12 @@ galaxyline.section.short_line_left[1] = {
 	SFileName = {
 		provider = fileinfo.filename_in_special_buffer,
 		icon = fileinfo.get_file_icon,
-		highlight = { mocha.base, mocha.maroon },
+		highlight = { fileinfo.get_file_icon_color, mocha.surface0 },
 	}
 }
 
 vim.api.nvim_set_hl(0, "TabLine", { fg = mocha.text, bg = mocha.surface0 })
 vim.api.nvim_set_hl(0, "TabLineFill", { bg = mocha.base })
 vim.api.nvim_set_hl(0, "TabLineSel", { fg = mocha.base, bg = mocha.peach })
+vim.api.nvim_set_hl(0, "NvimTreeStatusLine", { bg = mocha.base })
+vim.api.nvim_set_hl(0, "NvimTreeStatuslineNc", { fg = mocha.base, bg = mocha.base })
