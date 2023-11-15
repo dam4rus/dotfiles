@@ -197,67 +197,124 @@ vim.opt.termguicolors = true
 -- empty setup using defaults
 require("nvim-tree").setup()
 
-require('tabline').setup({
-	show_index = false,
-	show_icon = true,
-	modify_indicator = " 󰙏",
+-- require('tabline').setup({
+-- 	show_index = false,
+-- 	show_icon = true,
+-- 	modify_indicator = " 󰙏",
+-- })
+
+-- local galaxyline = require("galaxyline")
+-- local fileinfo = require("galaxyline.providers.fileinfo")
+-- local vcs = require('galaxyline.providers.vcs')
+-- local diagnostic = require("galaxyline.providers.diagnostic")
+-- local condition = require("galaxyline.condition")
+-- galaxyline.short_line_list = {'NvimTree'}
+-- galaxyline.section.left[1] = {
+-- 	FileName = {
+-- 		provider = fileinfo.get_current_file_path,
+-- 		condition = condition.buffer_not_empty,
+-- 		icon = fileinfo.get_file_icon,
+-- 		highlight = { fileinfo.get_file_icon_color, mocha.surface0 },
+-- 	}
+-- }
+-- galaxyline.section.left[2] = {
+-- 	GitBranch = {
+-- 		provider = vcs.get_git_branch,
+-- 		condition = condition.check_git_workspace,
+-- 		icon = "   ",
+-- 		highlight = { mocha.base, mocha.rosewater },
+-- 		separator = " ",
+-- 		separator_highlight = { mocha.rosewater, mocha.rosewater },
+-- 	}
+-- }
+-- galaxyline.section.left[3] = {
+-- 	DiagnosticError = {
+-- 		provider = diagnostic.get_diagnostic_error,
+-- 		icon = "   ",
+-- 		highlight = { mocha.red, mocha.base },
+-- 	}
+-- }
+-- galaxyline.section.left[4] = {
+-- 	DiagnosticWarning = {
+-- 		provider = diagnostic.get_diagnostic_warn,
+-- 		icon = "   ",
+-- 		highlight = { mocha.yellow, mocha.base },
+-- 	}
+-- }
+-- galaxyline.section.right[1] = {
+-- 	LineColumn = {
+-- 		provider = fileinfo.line_column,
+-- 		highlight = { mocha.text, mocha.surface0 },
+-- 	}
+-- }
+-- galaxyline.section.short_line_left[1] = {
+-- 	SFileName = {
+-- 		provider = fileinfo.filename_in_special_buffer,
+-- 		icon = fileinfo.get_file_icon,
+-- 		highlight = { fileinfo.get_file_icon_color, mocha.surface0 },
+-- 	}
+-- }
+
+require('lualine').setup({
+	options = {
+		component_separators = '',
+		section_separators = '',
+	},
+	sections = {
+		lualine_a = {'mode'},
+		lualine_b = {
+			{
+				'filetype',
+				icon_only = true,
+			},
+			{
+				'filename',
+				path = 1,
+				symbols = {
+					modified = '󰙏',
+				},
+			},
+		},
+		lualine_c = {
+			{
+				'branch',
+				icon = '',
+			},
+			'diagnostics',
+		},
+		lualine_x = {},
+		lualine_y = {},
+		lualine_z = {'location'},
+	},
 })
 
-local galaxyline = require("galaxyline")
-local fileinfo = require("galaxyline.providers.fileinfo")
-local vcs = require('galaxyline.providers.vcs')
-local diagnostic = require("galaxyline.providers.diagnostic")
-local condition = require("galaxyline.condition")
 local mocha = require("catppuccin.palettes").get_palette "mocha"
-galaxyline.short_line_list = {'NvimTree'}
-galaxyline.section.left[1] = {
-	FileName = {
-		provider = fileinfo.get_current_file_path,
-		condition = condition.buffer_not_empty,
-		icon = fileinfo.get_file_icon,
-		highlight = { fileinfo.get_file_icon_color, mocha.surface0 },
-	}
+local bufferline = require("bufferline")
+bufferline.setup {
+    highlights = require("catppuccin.groups.integrations.bufferline").get {
+        styles = { "italic", "bold" },
+        custom = {
+            all = {
+                fill = { bg = "#000000" },
+            },
+            mocha = {
+                background = { fg = mocha.text },
+            },
+        },
+    },
 }
-galaxyline.section.left[2] = {
-	GitBranch = {
-		provider = vcs.get_git_branch,
-		condition = condition.check_git_workspace,
-		icon = "   ",
-		highlight = { mocha.base, mocha.rosewater },
-		separator = " ",
-		separator_highlight = { mocha.rosewater, mocha.rosewater },
-	}
-}
-galaxyline.section.left[3] = {
-	DiagnosticError = {
-		provider = diagnostic.get_diagnostic_error,
-		icon = "   ",
-		highlight = { mocha.red, mocha.base },
-	}
-}
-galaxyline.section.left[4] = {
-	DiagnosticWarning = {
-		provider = diagnostic.get_diagnostic_warn,
-		icon = "   ",
-		highlight = { mocha.yellow, mocha.base },
-	}
-}
-galaxyline.section.right[1] = {
-	LineColumn = {
-		provider = fileinfo.line_column,
-		highlight = { mocha.text, mocha.surface0 },
-	}
-}
-galaxyline.section.short_line_left[1] = {
-	SFileName = {
-		provider = fileinfo.filename_in_special_buffer,
-		icon = fileinfo.get_file_icon,
-		highlight = { fileinfo.get_file_icon_color, mocha.surface0 },
-	}
-}
+vim.keymap.set('n', '[b', function()
+	bufferline.go_to(1, false)
+end)
+vim.keymap.set('n', ']b', function()
+	bufferline.go_to(-1, false)
+end)
+vim.keymap.set('n', '[mb', function()
+	bufferline.move_to(1)
+end)
+vim.keymap.set('n', ']mb', function()
+	bufferline.move_to(-1)
+end)
 
-vim.api.nvim_set_hl(0, "TabLine", { fg = mocha.text, bg = mocha.surface0 })
-vim.api.nvim_set_hl(0, "TabLineFill", { bg = mocha.base })
-vim.api.nvim_set_hl(0, "TabLineSel", { fg = mocha.base, bg = mocha.peach })
 vim.api.nvim_set_hl(0, "NvimTreeStatusLine", { bg = mocha.base })
 vim.api.nvim_set_hl(0, "NvimTreeStatuslineNc", { fg = mocha.base, bg = mocha.base })
