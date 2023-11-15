@@ -7,6 +7,7 @@ Plug 'hrsh7th/cmp-cmdline'
 Plug 'hrsh7th/nvim-cmp'
 Plug 'hrsh7th/cmp-vsnip'
 Plug 'hrsh7th/vim-vsnip'
+Plug 'hrsh7th/cmp-nvim-lsp-signature-help'
 Plug 'neovim/nvim-lspconfig'
 Plug 'ray-x/go.nvim'
 Plug 'ray-x/guihua.lua'
@@ -27,17 +28,20 @@ Plug 'NTBBloodbath/galaxyline.nvim'
 Plug 'crispgm/nvim-tabline'
 Plug 'RRethy/vim-illuminate'
 Plug 'martinsione/darkplus.nvim'
+Plug 'catppuccin/nvim', { 'as': 'catppuccin' }
 Plug 'akinsho/git-conflict.nvim'
+Plug 'mfussenegger/nvim-dap'
 call plug#end()
 
-colorscheme darkplus
+" colorscheme darkplus
+colorscheme catppuccin
 lua require('config')
 set listchars+=leadmultispace:>···
 set list
 set tabstop=4
 set shiftwidth=4
 set number
-set scroll=4
+set title
 
 " aunmenu PopUp.How-to\ disable\ mouse
 menu PopUp.-2- <Nop>

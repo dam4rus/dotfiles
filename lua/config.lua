@@ -25,6 +25,7 @@ cmp.setup({
 	}),
 	sources = cmp.config.sources({
 		{ name = 'nvim_lsp' },
+		{ name = 'nvim_lsp_signature_help' },
 		{ name = 'vsnip' }, -- For vsnip users.
 		-- { name = 'luasnip' }, -- For luasnip users.
 		-- { name = 'ultisnips' }, -- For ultisnips users.
@@ -63,7 +64,15 @@ cmp.setup.cmdline(':', {
 
 
 local lspconfig = require("lspconfig")
-lspconfig.gopls.setup({})
+lspconfig.gopls.setup({
+	settings = {
+        gopls = {
+            env = {
+                GOFLAGS = "-tags=integration"
+            }
+        }
+    }
+})
 lspconfig.lua_ls.setup({
 	settings = {
 		Lua = {
@@ -133,12 +142,13 @@ vim.api.nvim_create_autocmd('LspAttach', {
 		)
 		vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(
 			vim.lsp.handlers.signature_help, {
-				border = "rounded"
+				border = "rounded",
+				close_events = { "CursorMoved", "BufHidden" },
 			}
 		)
 		vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
 		vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
-		vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, opts)
+		vim.keymap.set({ 'n', 'i' }, '<C-k>', vim.lsp.buf.signature_help, opts)
 		vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder, opts)
 		vim.keymap.set('n', '<space>wr', vim.lsp.buf.remove_workspace_folder, opts)
 		vim.keymap.set('n', '<space>wl', function()
@@ -198,15 +208,14 @@ local fileinfo = require("galaxyline.providers.fileinfo")
 local vcs = require('galaxyline.providers.vcs')
 local diagnostic = require("galaxyline.providers.diagnostic")
 local condition = require("galaxyline.condition")
-local colors = require('darkplus.colors')
+local mocha = require("catppuccin.palettes").get_palette "mocha"
+galaxyline.short_line_list = {'NvimTree'}
 galaxyline.section.left[1] = {
 	FileName = {
 		provider = fileinfo.get_current_file_path,
-		condition = function()
-			return vim.fn.empty(vim.fn.expand("%:t")) ~= 1
-		end,
+		condition = condition.buffer_not_empty,
 		icon = fileinfo.get_file_icon,
-		highlight = { colors.green, colors.dark },
+		highlight = { mocha.base, mocha.maroon },
 	}
 }
 galaxyline.section.left[2] = {
@@ -214,32 +223,39 @@ galaxyline.section.left[2] = {
 		provider = vcs.get_git_branch,
 		condition = condition.check_git_workspace,
 		icon = "   ",
-		highlight = { colors.fg, colors.magenta },
+		highlight = { mocha.base, mocha.rosewater },
 		separator = " ",
-		separator_highlight = { colors.magenta, colors.magenta },
+		separator_highlight = { mocha.rosewater, mocha.rosewater },
 	}
 }
 galaxyline.section.left[3] = {
 	DiagnosticError = {
 		provider = diagnostic.get_diagnostic_error,
 		icon = "   ",
-		highlight = { colors.error_red, colors.bg },
+		highlight = { mocha.red, mocha.base },
 	}
 }
 galaxyline.section.left[4] = {
 	DiagnosticWarning = {
 		provider = diagnostic.get_diagnostic_warn,
 		icon = "   ",
-		highlight = { colors.warning_orange, colors.bg },
+		highlight = { mocha.yellow, mocha.base },
 	}
 }
 galaxyline.section.right[1] = {
 	LineColumn = {
 		provider = fileinfo.line_column,
-		highlight = { colors.fg, colors.dark },
+		highlight = { mocha.text, mocha.surface0 },
+	}
+}
+galaxyline.section.short_line_left[1] = {
+	SFileName = {
+		provider = fileinfo.filename_in_special_buffer,
+		icon = fileinfo.get_file_icon,
+		highlight = { mocha.base, mocha.maroon },
 	}
 }
 
-vim.api.nvim_set_hl(0, "TabLine", { fg = colors.fg, bg = colors.dark })
-vim.api.nvim_set_hl(0, "TabLineFill", { bg = colors.dark })
-vim.api.nvim_set_hl(0, "TabLineSel", { fg = colors.green, bg = colors.bg })
+vim.api.nvim_set_hl(0, "TabLine", { fg = mocha.text, bg = mocha.surface0 })
+vim.api.nvim_set_hl(0, "TabLineFill", { bg = mocha.base })
+vim.api.nvim_set_hl(0, "TabLineSel", { fg = mocha.base, bg = mocha.peach })
