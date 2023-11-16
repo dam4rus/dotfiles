@@ -1,3 +1,10 @@
+-- disable netrw at the very start of your init.lua
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+
+-- set termguicolors to enable highlight groups
+vim.opt.termguicolors = true
+
 vim.opt.clipboard = 'unnamedplus'
 
 local cmp = require('cmp')
@@ -187,13 +194,27 @@ require('Comment').setup()
 require('gitui').setup()
 require('git-conflict').setup()
 
--- disable netrw at the very start of your init.lua
-vim.g.loaded_netrw = 1
-vim.g.loaded_netrwPlugin = 1
-
--- set termguicolors to enable highlight groups
-vim.opt.termguicolors = true
-
+-- setup neorg
+require('neorg').setup {
+    load = {
+        ["core.defaults"] = {}, -- Loads default behaviour
+        ["core.concealer"] = {}, -- Adds pretty icons to your documents
+        ["core.dirman"] = { -- Manages Neorg workspaces
+            config = {
+                workspaces = {
+                    notes = "~/notes",
+                },
+				index = "index.norg",
+            },
+        },
+		["core.autocommands"] = {},
+		["core.integrations.treesitter"] = {},
+    },
+}
+vim.api.nvim_create_autocmd({"BufEnter", "BufWinEnter"}, {
+  pattern = {"*.norg"},
+  command = "set conceallevel=3"
+})
 -- empty setup using defaults
 require("nvim-tree").setup()
 
@@ -304,10 +325,10 @@ bufferline.setup {
     },
 }
 vim.keymap.set('n', '[b', function()
-	bufferline.go_to(1, false)
+	bufferline.cycle(-1)
 end)
 vim.keymap.set('n', ']b', function()
-	bufferline.go_to(-1, false)
+	bufferline.cycle(1)
 end)
 vim.keymap.set('n', '[mb', function()
 	bufferline.move_to(1)

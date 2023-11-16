@@ -33,6 +33,7 @@ Plug 'RRethy/vim-illuminate'
 Plug 'catppuccin/nvim', { 'as': 'catppuccin' }
 Plug 'akinsho/git-conflict.nvim'
 Plug 'mfussenegger/nvim-dap'
+Plug 'nvim-neorg/neorg'
 call plug#end()
 
 " colorscheme darkplus
