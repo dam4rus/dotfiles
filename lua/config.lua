@@ -7,8 +7,8 @@ vim.opt.termguicolors = true
 
 vim.opt.clipboard = 'unnamedplus'
 
+-- setup cmp
 local cmp = require('cmp')
-
 cmp.setup({
 	snippet = {
 		-- REQUIRED - you must specify a snippet engine
@@ -69,7 +69,7 @@ cmp.setup.cmdline(':', {
 	})
 })
 
-
+-- Setup LSPs
 local lspconfig = require("lspconfig")
 lspconfig.gopls.setup({
 	settings = {
@@ -105,11 +105,14 @@ vim.api.nvim_create_autocmd("BufWritePre", {
 	end,
 	group = format_sync_grp,
 })
+
+-- Set formatter for json files
 vim.api.nvim_create_autocmd("FileType", {
 	pattern = "json",
-	command = "set formatprg=jq",
+	command = "setlocal formatprg=jq",
 })
 
+-- Setup telescope
 require("telescope").setup({
 	defaults = {
 		layout_strategy = "flex",
@@ -142,6 +145,8 @@ vim.api.nvim_create_autocmd('LspAttach', {
 		-- Buffer local mappings.
 		-- See `:help vim.lsp.*` for documentation on any of the below functions
 		local opts = { buffer = ev.buf }
+
+		-- Make the windows bordered
 		vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
 			vim.lsp.handlers.hover, {
 				border = "rounded",
@@ -153,6 +158,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
 				close_events = { "CursorMoved", "BufHidden" },
 			}
 		)
+		-- Key mappings
 		vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
 		vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
 		vim.keymap.set({ 'n', 'i' }, '<C-k>', vim.lsp.buf.signature_help, opts)
@@ -168,10 +174,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
 		end, opts)
 		vim.keymap.set('n', '<leader>im', [[<cmd>lua require'telescope'.extensions.goimpl.goimpl{}<CR>]],
 			{ noremap = true, silent = true })
-		local goiferr = require("go.iferr")
-		local goreftool = require('go.reftool')
-		vim.keymap.set('n', '<leader>ie', goiferr.run, {})
-		vim.keymap.set('n', '<leader>is', goreftool.fillstruct, {})
+
 
 		vim.keymap.set("n", "gr", builtin.lsp_references, {})
 		vim.keymap.set("n", "gi", builtin.lsp_implementations, {})
@@ -180,6 +183,12 @@ vim.api.nvim_create_autocmd('LspAttach', {
 		vim.keymap.set("n", "<leader>fd", builtin.lsp_document_symbols, {})
 		vim.keymap.set("n", "<leader>fw", builtin.lsp_dynamic_workspace_symbols, {})
 		vim.keymap.set("n", "<space>d", builtin.diagnostics, {})
+
+		-- Go specific mappings
+		local goiferr = require("go.iferr")
+		local goreftool = require('go.reftool')
+		vim.keymap.set('n', '<leader>ie', goiferr.run, {})
+		vim.keymap.set('n', '<leader>is', goreftool.fillstruct, {})
 	end,
 })
 
@@ -217,6 +226,79 @@ vim.api.nvim_create_autocmd({"BufEnter", "BufWinEnter"}, {
 })
 -- empty setup using defaults
 require("nvim-tree").setup()
+
+require('lualine').setup({
+	options = {
+		component_separators = '',
+		section_separators = '',
+	},
+	sections = {
+		lualine_a = {'mode'},
+		lualine_b = {
+			{
+				'filetype',
+				icon_only = true,
+			},
+			{
+				'filename',
+				path = 1,
+				symbols = {
+					modified = '󰙏',
+				},
+			},
+		},
+		lualine_c = {
+			{
+				'branch',
+				icon = '',
+			},
+			'diagnostics',
+		},
+		lualine_x = {},
+		lualine_y = {},
+		lualine_z = {'location'},
+	},
+})
+
+local mocha = require("catppuccin.palettes").get_palette "mocha"
+-- Setup bufferline
+local bufferline = require("bufferline")
+bufferline.setup {
+    highlights = require("catppuccin.groups.integrations.bufferline").get {
+        styles = { "italic", "bold" },
+        custom = {
+            all = {
+                fill = { bg = "#000000" },
+            },
+            mocha = {
+                background = { fg = mocha.text },
+            },
+        },
+    },
+}
+vim.keymap.set('n', '[b', function()
+	bufferline.cycle(-1)
+end)
+vim.keymap.set('n', ']b', function()
+	bufferline.cycle(1)
+end)
+vim.keymap.set('n', '[mb', function()
+	bufferline.move_to(1)
+end)
+vim.keymap.set('n', ']mb', function()
+	bufferline.move_to(-1)
+end)
+
+vim.api.nvim_set_hl(0, "NvimTreeStatusLine", { bg = mocha.base })
+vim.api.nvim_set_hl(0, "NvimTreeStatuslineNc", { fg = mocha.base, bg = mocha.base })
+
+vim.keymap.set({'n', 'v'}, '<C-Up>', '<C-U>')
+vim.keymap.set({'n', 'v'}, '<C-Down>', '<C-D>')
+vim.keymap.set({'n', 'v'}, '<C-Right>', 'w')
+vim.keymap.set({'n', 'v'}, '<C-Left>', 'b')
+vim.keymap.set({'n', 'v'}, '<C-S-Right>', 'W')
+vim.keymap.set({'n', 'v'}, '<C-S-Left>', 'B')
+
 
 -- require('tabline').setup({
 -- 	show_index = false,
@@ -276,66 +358,3 @@ require("nvim-tree").setup()
 -- 	}
 -- }
 
-require('lualine').setup({
-	options = {
-		component_separators = '',
-		section_separators = '',
-	},
-	sections = {
-		lualine_a = {'mode'},
-		lualine_b = {
-			{
-				'filetype',
-				icon_only = true,
-			},
-			{
-				'filename',
-				path = 1,
-				symbols = {
-					modified = '󰙏',
-				},
-			},
-		},
-		lualine_c = {
-			{
-				'branch',
-				icon = '',
-			},
-			'diagnostics',
-		},
-		lualine_x = {},
-		lualine_y = {},
-		lualine_z = {'location'},
-	},
-})
-
-local mocha = require("catppuccin.palettes").get_palette "mocha"
-local bufferline = require("bufferline")
-bufferline.setup {
-    highlights = require("catppuccin.groups.integrations.bufferline").get {
-        styles = { "italic", "bold" },
-        custom = {
-            all = {
-                fill = { bg = "#000000" },
-            },
-            mocha = {
-                background = { fg = mocha.text },
-            },
-        },
-    },
-}
-vim.keymap.set('n', '[b', function()
-	bufferline.cycle(-1)
-end)
-vim.keymap.set('n', ']b', function()
-	bufferline.cycle(1)
-end)
-vim.keymap.set('n', '[mb', function()
-	bufferline.move_to(1)
-end)
-vim.keymap.set('n', ']mb', function()
-	bufferline.move_to(-1)
-end)
-
-vim.api.nvim_set_hl(0, "NvimTreeStatusLine", { bg = mocha.base })
-vim.api.nvim_set_hl(0, "NvimTreeStatuslineNc", { fg = mocha.base, bg = mocha.base })
