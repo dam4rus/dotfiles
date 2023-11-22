@@ -89,6 +89,28 @@ lspconfig.lua_ls.setup({
 		}
 	}
 })
+lspconfig.bashls.setup({})
+lspconfig.jsonls.setup({})
+local schemastore = require('schemastore')
+lspconfig.yamlls.setup({
+	settings = {
+		schemaStore = {
+        	-- You must disable built-in schemaStore support if you want to use
+        	-- this plugin and its advanced options like `ignore`.
+        	enable = false,
+        	-- Avoid TypeError: Cannot read properties of undefined (reading 'length')
+        	url = "",
+      	},
+      	schemas = schemastore.yaml.schemas({
+			select = {
+				'Helm Chart.yaml',
+				'Helm Chart.lock',
+			},
+		}),
+		validate = { enable = true },
+	}
+})
+lspconfig.dockerls.setup({})
 
 require("go").setup({
 	disable_defaults = false,
@@ -175,7 +197,6 @@ vim.api.nvim_create_autocmd('LspAttach', {
 		vim.keymap.set('n', '<leader>im', [[<cmd>lua require'telescope'.extensions.goimpl.goimpl{}<CR>]],
 			{ noremap = true, silent = true })
 
-
 		vim.keymap.set("n", "gr", builtin.lsp_references, {})
 		vim.keymap.set("n", "gi", builtin.lsp_implementations, {})
 		vim.keymap.set('n', '<space>D', builtin.lsp_type_definitions, opts)
@@ -202,6 +223,9 @@ vim.keymap.set('n', '<leader>fr', builtin.resume, {})
 require('Comment').setup()
 require('gitui').setup()
 require('git-conflict').setup()
+require('litee.lib').setup()
+require('litee.gh').setup()
+require("which-key").setup()
 
 -- setup neorg
 require('neorg').setup {
@@ -298,6 +322,8 @@ vim.keymap.set({'n', 'v'}, '<C-Right>', 'w')
 vim.keymap.set({'n', 'v'}, '<C-Left>', 'b')
 vim.keymap.set({'n', 'v'}, '<C-S-Right>', 'W')
 vim.keymap.set({'n', 'v'}, '<C-S-Left>', 'B')
+vim.keymap.set({'n', 'v'}, '<leader>p', '"0p')
+vim.keymap.set({'n', 'v'}, '<leader>P', '"0P')
 
 
 -- require('tabline').setup({

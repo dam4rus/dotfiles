@@ -34,6 +34,10 @@ Plug 'catppuccin/nvim', { 'as': 'catppuccin' }
 Plug 'akinsho/git-conflict.nvim'
 Plug 'mfussenegger/nvim-dap'
 Plug 'nvim-neorg/neorg'
+Plug 'folke/which-key.nvim'
+Plug 'ldelossa/litee.nvim'
+Plug 'ldelossa/gh.nvim'
+Plug 'b0o/schemastore.nvim'
 call plug#end()
 
 " colorscheme darkplus
