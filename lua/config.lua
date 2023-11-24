@@ -105,12 +105,16 @@ lspconfig.yamlls.setup({
 			select = {
 				'Helm Chart.yaml',
 				'Helm Chart.lock',
+				'GitHub Action',
+				'GitHub Workflow',
+				'GitHub Workflow Template Properties',
 			},
 		}),
 		validate = { enable = true },
 	}
 })
 lspconfig.dockerls.setup({})
+lspconfig.terraformls.setup({})
 
 require("go").setup({
 	disable_defaults = false,
@@ -118,6 +122,13 @@ require("go").setup({
 })
 require("rust-tools").setup()
 
+-- Setup auto format for terraform files
+vim.api.nvim_create_autocmd("BufWritePre", {
+	pattern = {"*.tf", "*.tfvars"},
+	callback = function ()
+		 vim.lsp.buf.format()
+	end
+})
 -- Run gofmt + goimport on save
 local format_sync_grp = vim.api.nvim_create_augroup("GoImport", {})
 vim.api.nvim_create_autocmd("BufWritePre", {
