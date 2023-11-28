@@ -238,6 +238,21 @@ require('litee.lib').setup()
 require('litee.gh').setup()
 require("which-key").setup()
 
+-- setup UFO
+vim.o.foldcolumn = '1' -- '0' is not bad
+vim.o.foldlevel = 99 -- Using ufo provider need a large value, feel free to decrease the value
+vim.o.foldlevelstart = 99
+vim.o.foldenable = true
+
+vim.keymap.set('n', 'zR', require('ufo').openAllFolds)
+vim.keymap.set('n', 'zM', require('ufo').closeAllFolds)
+
+require('ufo').setup({
+    provider_selector = function(bufnr, filetype, buftype)
+        return {'treesitter', 'indent'}
+    end
+})
+
 -- setup neorg
 require('neorg').setup {
     load = {
@@ -327,6 +342,7 @@ end)
 vim.api.nvim_set_hl(0, "NvimTreeStatusLine", { bg = mocha.base })
 vim.api.nvim_set_hl(0, "NvimTreeStatuslineNc", { fg = mocha.base, bg = mocha.base })
 
+-- Setup mappings
 vim.keymap.set({'n', 'v'}, '<C-Up>', '<C-U>')
 vim.keymap.set({'n', 'v'}, '<C-Down>', '<C-D>')
 vim.keymap.set({'n', 'v'}, '<C-Right>', 'w')

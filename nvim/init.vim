@@ -38,6 +38,8 @@ Plug 'folke/which-key.nvim'
 Plug 'ldelossa/litee.nvim'
 Plug 'ldelossa/gh.nvim'
 Plug 'b0o/schemastore.nvim'
+Plug 'kevinhwang91/promise-async'
+Plug 'kevinhwang91/nvim-ufo'
 call plug#end()
 
 " colorscheme darkplus
