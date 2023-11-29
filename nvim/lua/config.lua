@@ -237,6 +237,7 @@ require('git-conflict').setup()
 require('litee.lib').setup()
 require('litee.gh').setup()
 require("which-key").setup()
+require('auto-session').setup()
 
 -- setup UFO
 vim.o.foldcolumn = '1' -- '0' is not bad
@@ -275,7 +276,12 @@ vim.api.nvim_create_autocmd({"BufEnter", "BufWinEnter"}, {
   command = "set conceallevel=3"
 })
 -- empty setup using defaults
-require("nvim-tree").setup()
+require("nvim-tree").setup({
+	view = {
+		width = 40,
+	},
+})
+vim.keymap.set({'n', 'v'}, '<leader><Tab>', "[[<cmd>NvimTreeToggle<CR>]]")
 
 require('lualine').setup({
 	options = {

@@ -40,6 +40,7 @@ Plug 'ldelossa/gh.nvim'
 Plug 'b0o/schemastore.nvim'
 Plug 'kevinhwang91/promise-async'
 Plug 'kevinhwang91/nvim-ufo'
+Plug 'rmagatti/auto-session'
 call plug#end()
 
 " colorscheme darkplus
