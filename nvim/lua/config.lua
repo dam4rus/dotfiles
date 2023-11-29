@@ -1,3 +1,15 @@
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.loop.fs_stat(lazypath) then
+  vim.fn.system({
+    "git",
+    "clone",
+    "--filter=blob:none",
+    "https://github.com/folke/lazy.nvim.git",
+    "--branch=stable", -- latest stable release
+    lazypath,
+  })
+end
+vim.opt.rtp:prepend(lazypath)
 -- disable netrw at the very start of your init.lua
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
@@ -7,6 +19,152 @@ vim.opt.termguicolors = true
 
 vim.opt.clipboard = 'unnamedplus'
 
+require("lazy").setup({
+	{'nvim-treesitter/nvim-treesitter', build = ":TSUpdate" },
+	'hrsh7th/cmp-nvim-lsp',
+	'hrsh7th/cmp-buffer',
+    'hrsh7th/cmp-path',
+    'hrsh7th/cmp-cmdline',
+    'hrsh7th/nvim-cmp',
+    'hrsh7th/cmp-vsnip',
+    'hrsh7th/vim-vsnip',
+    'hrsh7th/cmp-nvim-lsp-signature-help',
+    'neovim/nvim-lspconfig',
+	{
+		"ray-x/go.nvim",
+		dependencies = {  -- optional packages
+			"ray-x/guihua.lua",
+			"neovim/nvim-lspconfig",
+			"nvim-treesitter/nvim-treesitter",
+		},
+		opts = {
+			disable_defaults = false,
+			gofmt = "gofmt"
+		},
+		event = {"CmdlineEnter"},
+		ft = {"go", 'gomod'},
+	},
+    'nvim-tree/nvim-web-devicons',
+	{
+		'nvim-tree/nvim-tree.lua',
+		opts = {
+			view = {
+				width = 40,
+			},
+		},
+	},
+	{ 'junegunn/fzf', dir = '~/.fzf', build = "./install --all" },
+    'junegunn/fzf.vim',
+    'nvim-lua/plenary.nvim',
+	{
+		'nvim-telescope/telescope.nvim',
+		tag = '0.1.4',
+		dependencies = {
+			'nvim-lua/plenary.nvim',
+		},
+		opts = {
+			defaults = {
+				layout_strategy = "flex",
+				layout_config = {
+					width = 0.90,
+					height = 0.95,
+					horizontal = {
+						preview_width = 0.5,
+					},
+				},
+			}
+		},
+	},
+    'edolphin-ydf/goimpl.nvim',
+	{
+		'simrat39/rust-tools.nvim',
+		dependencies = {
+			'neovim/nvim-lspconfig',
+			'nvim-lua/plenary.nvim',
+			'mfussenegger/nvim-dap',
+		},
+		opts = {},
+		event = {"CmdlineEnter"},
+		ft = {"rust"},
+	},
+    'meain/vim-jsontogo',
+	{
+		'numToStr/Comment.nvim',
+		opts = {},
+	},
+	{
+		'aspeddro/gitui.nvim',
+		opts = {},
+	},
+    'airblade/vim-gitgutter',
+    'nvim-lualine/lualine.nvim',
+	{ 'akinsho/bufferline.nvim', version = "*", dependencies = 'nvim-tree/nvim-web-devicons' },
+    'RRethy/vim-illuminate',
+	{
+		'catppuccin/nvim',
+		name = "catppuccin",
+		priority = 1000,
+	},
+	{
+		'akinsho/git-conflict.nvim',
+		opts = {},
+	},
+    'mfussenegger/nvim-dap',
+	{
+		"nvim-neorg/neorg",
+		-- lazy-load on filetype
+		ft = "norg",
+		-- options for neorg. This will automatically call `require("neorg").setup(opts)`
+		opts = {
+			load = {
+				["core.defaults"] = {}, -- Loads default behaviour
+				["core.concealer"] = {}, -- Adds pretty icons to your documents
+				["core.dirman"] = { -- Manages Neorg workspaces
+					config = {
+						workspaces = {
+							notes = "~/notes",
+						},
+						index = "index.norg",
+					},
+				},
+				["core.autocommands"] = {},
+				["core.integrations.treesitter"] = {},
+			},
+		},
+	},
+	{
+		'folke/which-key.nvim',
+		opts = {},
+	},
+	'ldelossa/litee.nvim',
+	'ldelossa/gh.nvim',
+    'b0o/schemastore.nvim',
+    'kevinhwang91/promise-async',
+    'kevinhwang91/nvim-ufo',
+	{
+		'rmagatti/auto-session',
+		opts = {
+			pre_save_cmds = {
+				function ()
+					local nvim_tree = require('nvim-tree.api')
+					nvim_tree.tree.close()
+				end
+			},
+			post_save_cmds = {
+				function ()
+					local nvim_tree = require('nvim-tree.api')
+					nvim_tree.tree.open({ path = vim.fn.getcwd() })
+				end
+			},
+			cwd_change_handling = {
+				post_cwd_changed_hook = function()
+					local nvim_tree = require('nvim-tree.api')
+					nvim_tree.tree.open({ path = vim.fn.getcwd() })
+				end
+			},
+		},
+	}
+})
 -- setup cmp
 local cmp = require('cmp')
 cmp.setup({
@@ -116,12 +274,6 @@ lspconfig.yamlls.setup({
 lspconfig.dockerls.setup({})
 lspconfig.terraformls.setup({})
 
-require("go").setup({
-	disable_defaults = false,
-	gofmt = "gofmt"
-})
-require("rust-tools").setup()
-
 -- Setup auto format for terraform files
 vim.api.nvim_create_autocmd("BufWritePre", {
 	pattern = {"*.tf", "*.tfvars"},
@@ -146,18 +298,6 @@ vim.api.nvim_create_autocmd("FileType", {
 })
 
 -- Setup telescope
-require("telescope").setup({
-	defaults = {
-		layout_strategy = "flex",
-		layout_config = {
-			width = 0.90,
-			height = 0.95,
-			horizontal = {
-				preview_width = 0.5,
-			},
-		},
-	}
-})
 local builtin = require("telescope.builtin")
 
 -- Global mappings.
@@ -231,13 +371,8 @@ vim.keymap.set('n', '<leader>fh', builtin.help_tags, {})
 vim.keymap.set('n', '<leader>fi', builtin.grep_string, {})
 vim.keymap.set('n', '<leader>fr', builtin.resume, {})
 
-require('Comment').setup()
-require('gitui').setup()
-require('git-conflict').setup()
 require('litee.lib').setup()
 require('litee.gh').setup()
-require("which-key").setup()
-require('auto-session').setup()
 
 -- setup UFO
 vim.o.foldcolumn = '1' -- '0' is not bad
@@ -255,32 +390,11 @@ require('ufo').setup({
 })
 
 -- setup neorg
-require('neorg').setup {
-    load = {
-        ["core.defaults"] = {}, -- Loads default behaviour
-        ["core.concealer"] = {}, -- Adds pretty icons to your documents
-        ["core.dirman"] = { -- Manages Neorg workspaces
-            config = {
-                workspaces = {
-                    notes = "~/notes",
-                },
-				index = "index.norg",
-            },
-        },
-		["core.autocommands"] = {},
-		["core.integrations.treesitter"] = {},
-    },
-}
 vim.api.nvim_create_autocmd({"BufEnter", "BufWinEnter"}, {
   pattern = {"*.norg"},
   command = "set conceallevel=3"
 })
 -- empty setup using defaults
-require("nvim-tree").setup({
-	view = {
-		width = 40,
-	},
-})
 vim.keymap.set({'n', 'v'}, '<leader><Tab>', "[[<cmd>NvimTreeToggle<CR>]]")
 
 require('lualine').setup({
