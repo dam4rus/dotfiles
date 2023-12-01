@@ -20,7 +20,10 @@ vim.opt.termguicolors = true
 vim.opt.clipboard = 'unnamedplus'
 
 require("lazy").setup({
-	{'nvim-treesitter/nvim-treesitter', build = ":TSUpdate" },
+	{
+		'nvim-treesitter/nvim-treesitter',
+		build = ":TSUpdate"
+	},
 	'hrsh7th/cmp-nvim-lsp',
 	'hrsh7th/cmp-buffer',
     'hrsh7th/cmp-path',
@@ -43,6 +46,11 @@ require("lazy").setup({
 		},
 		event = {"CmdlineEnter"},
 		ft = {"go", 'gomod'},
+	},
+	{
+		'leoluz/nvim-dap-go',
+		opts = {},
+		ft = {"go"},
 	},
     'nvim-tree/nvim-web-devicons',
 	{
@@ -111,6 +119,12 @@ require("lazy").setup({
 	},
     'mfussenegger/nvim-dap',
 	{
+		'rcarriga/nvim-dap-ui',
+		dependencies = {
+			'mfussenegger/nvim-dap',
+		},
+	},
+	{
 		"nvim-neorg/neorg",
 		-- lazy-load on filetype
 		ft = "norg",
@@ -165,6 +179,14 @@ require("lazy").setup({
 		},
 	}
 })
+
+require('nvim-treesitter.configs').setup({
+	highlight = {
+		enable = true,
+		disable = { "c", "rust" },
+	},
+})
+
 -- setup cmp
 local cmp = require('cmp')
 cmp.setup({
@@ -273,6 +295,9 @@ lspconfig.yamlls.setup({
 })
 lspconfig.dockerls.setup({})
 lspconfig.terraformls.setup({})
+
+-- Setup DAP
+require('dap-go').setup()
 
 -- Setup auto format for terraform files
 vim.api.nvim_create_autocmd("BufWritePre", {
@@ -473,62 +498,65 @@ vim.keymap.set({'n', 'v'}, '<Home>', '^')
 vim.keymap.set({'n', 'v'}, '<leader>p', '"0p')
 vim.keymap.set({'n', 'v'}, '<leader>P', '"0P')
 
+-- DAP mappings
+vim.keymap.set('n', '<F5>', function() require('dap').continue() end)
+vim.keymap.set('n', '<F10>', function() require('dap').step_over() end)
+vim.keymap.set('n', '<F12>', function() require('dap').step_into() end)
+vim.keymap.set('n', '<C-F12>', function() require('dap').step_out() end)
+vim.keymap.set('n', '<Leader>b', function() require('dap').toggle_breakpoint() end)
+vim.keymap.set('n', '<Leader>B', function() require('dap').set_breakpoint() end)
+vim.keymap.set('n', '<Leader>dr', function() require('dap').repl.open() end)
+vim.keymap.set('n', '<Leader>dl', function() require('dap').run_last() end)
+vim.keymap.set({ 'n', 'v' }, '<Leader>dh', function()
+	require('dap.ui.widgets').hover()
+end)
+vim.keymap.set({ 'n', 'v' }, '<Leader>dp', function()
+	require('dap.ui.widgets').preview()
+end)
+vim.keymap.set('n', '<Leader>df', function()
+	local widgets = require('dap.ui.widgets')
+	widgets.centered_float(widgets.frames)
+end)
+vim.keymap.set('n', '<Leader>ds', function()
+	local widgets = require('dap.ui.widgets')
+	widgets.centered_float(widgets.scopes)
+end)
 
--- require('tabline').setup({
--- 	show_index = false,
--- 	show_icon = true,
--- 	modify_indicator = " 󰙏",
--- })
-
--- local galaxyline = require("galaxyline")
--- local fileinfo = require("galaxyline.providers.fileinfo")
--- local vcs = require('galaxyline.providers.vcs')
--- local diagnostic = require("galaxyline.providers.diagnostic")
--- local condition = require("galaxyline.condition")
--- galaxyline.short_line_list = {'NvimTree'}
--- galaxyline.section.left[1] = {
--- 	FileName = {
--- 		provider = fileinfo.get_current_file_path,
--- 		condition = condition.buffer_not_empty,
--- 		icon = fileinfo.get_file_icon,
--- 		highlight = { fileinfo.get_file_icon_color, mocha.surface0 },
--- 	}
--- }
--- galaxyline.section.left[2] = {
--- 	GitBranch = {
--- 		provider = vcs.get_git_branch,
--- 		condition = condition.check_git_workspace,
--- 		icon = "   ",
--- 		highlight = { mocha.base, mocha.rosewater },
--- 		separator = " ",
--- 		separator_highlight = { mocha.rosewater, mocha.rosewater },
--- 	}
--- }
--- galaxyline.section.left[3] = {
--- 	DiagnosticError = {
--- 		provider = diagnostic.get_diagnostic_error,
--- 		icon = "   ",
--- 		highlight = { mocha.red, mocha.base },
--- 	}
--- }
--- galaxyline.section.left[4] = {
--- 	DiagnosticWarning = {
--- 		provider = diagnostic.get_diagnostic_warn,
--- 		icon = "   ",
--- 		highlight = { mocha.yellow, mocha.base },
--- 	}
--- }
--- galaxyline.section.right[1] = {
--- 	LineColumn = {
--- 		provider = fileinfo.line_column,
--- 		highlight = { mocha.text, mocha.surface0 },
--- 	}
--- }
--- galaxyline.section.short_line_left[1] = {
--- 	SFileName = {
--- 		provider = fileinfo.filename_in_special_buffer,
--- 		icon = fileinfo.get_file_icon,
--- 		highlight = { fileinfo.get_file_icon_color, mocha.surface0 },
--- 	}
--- }
-
+-- which-key registrations
+local wk = require('which-key')
+wk.register({
+	b = "toggle breakpoint",
+	B = "set breakpoint",
+	d = {
+		r = "open repl",
+		l = "run last",
+		h = "dap hover",
+		p = "dap preview",
+		f = "dap frames",
+		s = "dap scopes",
+	},
+	f = {
+		f = "find files",
+		g = "find grep",
+		b = "buffers",
+		h = "help tags",
+		i = "grep word",
+		r = "resume telescope",
+		d = "document symbols",
+		w = "workspace symbols",
+	},
+	i = {
+		e = "Go: iferr",
+		s = "Go: fill struct",
+	},
+}, { prefix = '<leader>'})
+wk.register({
+	[']'] = {
+		b = "next buffer in tabline",
+		d = "next diagnostic",
+	},
+	['['] = {
+		b = "prev buffer in tabline",
+		d = "prev diagnostic",
+	},
+})
