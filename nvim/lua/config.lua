@@ -502,7 +502,7 @@ vim.keymap.set({'n', 'v'}, '<C-Right>', 'w')
 vim.keymap.set({'n', 'v'}, '<C-Left>', 'b')
 vim.keymap.set({'n', 'v'}, '<C-S-Right>', 'W')
 vim.keymap.set({'n', 'v'}, '<C-S-Left>', 'B')
-vim.keymap.set({'n', 'v', 'i'}, '<Home>', '^')
+vim.keymap.set({'n', 'v'}, '<Home>', '^')
 vim.keymap.set({'n', 'v'}, '<leader>p', '"0p')
 vim.keymap.set({'n', 'v'}, '<leader>P', '"0P')
 
