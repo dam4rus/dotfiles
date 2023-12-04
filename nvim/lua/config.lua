@@ -415,6 +415,9 @@ vim.keymap.set('n', 'zM', require('ufo').closeAllFolds)
 
 require('ufo').setup({
     provider_selector = function(bufnr, filetype, buftype)
+		if filetype == "rust" then
+			return {'lsp', 'indent'}
+		end
         return {'treesitter', 'indent'}
     end
 })
