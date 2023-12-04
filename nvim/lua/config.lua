@@ -177,7 +177,9 @@ require("lazy").setup({
 				end
 			},
 		},
-	}
+	},
+	"williamboman/mason.nvim",
+    "williamboman/mason-lspconfig.nvim",
 })
 
 require('nvim-treesitter.configs').setup({
@@ -334,6 +336,9 @@ vim.keymap.set('n', '<space>q', vim.diagnostic.setloclist)
 
 -- Use LspAttach autocommand to only map the following keys
 -- after the language server attaches to the current buffer
+require("mason").setup()
+require("mason-lspconfig").setup()
+
 vim.api.nvim_create_autocmd('LspAttach', {
 	group = vim.api.nvim_create_augroup('UserLspConfig', {}),
 	callback = function(ev)
@@ -494,7 +499,7 @@ vim.keymap.set({'n', 'v'}, '<C-Right>', 'w')
 vim.keymap.set({'n', 'v'}, '<C-Left>', 'b')
 vim.keymap.set({'n', 'v'}, '<C-S-Right>', 'W')
 vim.keymap.set({'n', 'v'}, '<C-S-Left>', 'B')
-vim.keymap.set({'n', 'v'}, '<Home>', '^')
+vim.keymap.set({'n', 'v', 'i'}, '<Home>', '^')
 vim.keymap.set({'n', 'v'}, '<leader>p', '"0p')
 vim.keymap.set({'n', 'v'}, '<leader>P', '"0P')
 
@@ -559,4 +564,19 @@ wk.register({
 		b = "prev buffer in tabline",
 		d = "prev diagnostic",
 	},
+	['<space>'] = {
+		f = "format buffer",
+		e = "open floating diagnostic",
+		q = "set location list",
+		D = "type definition",
+		d = "workspace diagnostics",
+		r = {
+			n = "rename",
+		},
+		w = {
+			a = "add workspace folder",
+			r = "remove workspace folder",
+			l = "list workspace folders",
+		}
+	}
 })
