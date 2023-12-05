@@ -297,6 +297,7 @@ lspconfig.yamlls.setup({
 })
 lspconfig.dockerls.setup({})
 lspconfig.terraformls.setup({})
+lspconfig.tsserver.setup({})
 
 -- Setup DAP
 require('dap-go').setup()
