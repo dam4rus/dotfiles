@@ -1,13 +1,13 @@
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
-  vim.fn.system({
-    "git",
-    "clone",
-    "--filter=blob:none",
-    "https://github.com/folke/lazy.nvim.git",
-    "--branch=stable", -- latest stable release
-    lazypath,
-  })
+	vim.fn.system({
+		"git",
+		"clone",
+		"--filter=blob:none",
+		"https://github.com/folke/lazy.nvim.git",
+		"--branch=stable", -- latest stable release
+		lazypath,
+	})
 end
 vim.opt.rtp:prepend(lazypath)
 -- disable netrw at the very start of your init.lua
@@ -26,16 +26,16 @@ require("lazy").setup({
 	},
 	'hrsh7th/cmp-nvim-lsp',
 	'hrsh7th/cmp-buffer',
-    'hrsh7th/cmp-path',
-    'hrsh7th/cmp-cmdline',
-    'hrsh7th/nvim-cmp',
-    'hrsh7th/cmp-vsnip',
-    'hrsh7th/vim-vsnip',
-    'hrsh7th/cmp-nvim-lsp-signature-help',
-    'neovim/nvim-lspconfig',
+	'hrsh7th/cmp-path',
+	'hrsh7th/cmp-cmdline',
+	'hrsh7th/nvim-cmp',
+	'hrsh7th/cmp-vsnip',
+	'hrsh7th/vim-vsnip',
+	'hrsh7th/cmp-nvim-lsp-signature-help',
+	'neovim/nvim-lspconfig',
 	{
 		"ray-x/go.nvim",
-		dependencies = {  -- optional packages
+		dependencies = { -- optional packages
 			"ray-x/guihua.lua",
 			"neovim/nvim-lspconfig",
 			"nvim-treesitter/nvim-treesitter",
@@ -44,15 +44,15 @@ require("lazy").setup({
 			disable_defaults = false,
 			gofmt = "gofmt"
 		},
-		event = {"CmdlineEnter"},
-		ft = {"go", 'gomod'},
+		event = { "CmdlineEnter" },
+		ft = { "go", 'gomod' },
 	},
 	{
 		'leoluz/nvim-dap-go',
 		opts = {},
-		ft = {"go"},
+		ft = { "go" },
 	},
-    'nvim-tree/nvim-web-devicons',
+	'nvim-tree/nvim-web-devicons',
 	{
 		'nvim-tree/nvim-tree.lua',
 		opts = {
@@ -61,29 +61,17 @@ require("lazy").setup({
 			},
 		},
 	},
-	{ 'junegunn/fzf', dir = '~/.fzf', build = "./install --all" },
-    'junegunn/fzf.vim',
-    'nvim-lua/plenary.nvim',
+	{ 'junegunn/fzf',            dir = '~/.fzf', build = "./install --all" },
+	'junegunn/fzf.vim',
+	'nvim-lua/plenary.nvim',
 	{
 		'nvim-telescope/telescope.nvim',
 		tag = '0.1.4',
 		dependencies = {
 			'nvim-lua/plenary.nvim',
 		},
-		opts = {
-			defaults = {
-				layout_strategy = "flex",
-				layout_config = {
-					width = 0.90,
-					height = 0.95,
-					horizontal = {
-						preview_width = 0.5,
-					},
-				},
-			}
-		},
 	},
-    'edolphin-ydf/goimpl.nvim',
+	'edolphin-ydf/goimpl.nvim',
 	{
 		'simrat39/rust-tools.nvim',
 		dependencies = {
@@ -92,10 +80,10 @@ require("lazy").setup({
 			'mfussenegger/nvim-dap',
 		},
 		opts = {},
-		event = {"CmdlineEnter"},
-		ft = {"rust"},
+		event = { "CmdlineEnter" },
+		ft = { "rust" },
 	},
-    'meain/vim-jsontogo',
+	'meain/vim-jsontogo',
 	{
 		'numToStr/Comment.nvim',
 		opts = {},
@@ -104,10 +92,11 @@ require("lazy").setup({
 		'aspeddro/gitui.nvim',
 		opts = {},
 	},
-    'airblade/vim-gitgutter',
-    'nvim-lualine/lualine.nvim',
-	{ 'akinsho/bufferline.nvim', version = "*", dependencies = 'nvim-tree/nvim-web-devicons' },
-    'RRethy/vim-illuminate',
+	'airblade/vim-gitgutter',
+	'sindrets/diffview.nvim',
+	'nvim-lualine/lualine.nvim',
+	{ 'akinsho/bufferline.nvim', version = "*",  dependencies = 'nvim-tree/nvim-web-devicons' },
+	'RRethy/vim-illuminate',
 	{
 		'catppuccin/nvim',
 		name = "catppuccin",
@@ -117,11 +106,18 @@ require("lazy").setup({
 		'akinsho/git-conflict.nvim',
 		opts = {},
 	},
-    'mfussenegger/nvim-dap',
+	'mfussenegger/nvim-dap',
 	{
 		'rcarriga/nvim-dap-ui',
 		dependencies = {
 			'mfussenegger/nvim-dap',
+		},
+		opts = {},
+	},
+	{
+		"folke/neodev.nvim",
+		opts = {
+			library = { plugins = { "nvim-dap-ui" }, types = true },
 		},
 	},
 	{
@@ -152,20 +148,21 @@ require("lazy").setup({
 	},
 	'ldelossa/litee.nvim',
 	'ldelossa/gh.nvim',
-    'b0o/schemastore.nvim',
-    'kevinhwang91/promise-async',
-    'kevinhwang91/nvim-ufo',
+	'b0o/schemastore.nvim',
+	'kevinhwang91/promise-async',
+	'kevinhwang91/nvim-ufo',
 	{
 		'rmagatti/auto-session',
 		opts = {
 			pre_save_cmds = {
-				function ()
+				function()
 					local nvim_tree = require('nvim-tree.api')
 					nvim_tree.tree.close()
+					require("dapui").close()
 				end
 			},
 			post_save_cmds = {
-				function ()
+				function()
 					local nvim_tree = require('nvim-tree.api')
 					nvim_tree.tree.open({ path = vim.fn.getcwd() })
 				end
@@ -179,7 +176,7 @@ require("lazy").setup({
 		},
 	},
 	"williamboman/mason.nvim",
-    "williamboman/mason-lspconfig.nvim",
+	"williamboman/mason-lspconfig.nvim",
 })
 
 require('nvim-treesitter.configs').setup({
@@ -255,12 +252,12 @@ cmp.setup.cmdline(':', {
 local lspconfig = require("lspconfig")
 lspconfig.gopls.setup({
 	settings = {
-        gopls = {
-            env = {
-                GOFLAGS = "-tags=integration"
-            }
-        }
-    }
+		gopls = {
+			env = {
+				GOFLAGS = "-tags=integration"
+			}
+		}
+	}
 })
 lspconfig.lua_ls.setup({
 	settings = {
@@ -277,13 +274,13 @@ local schemastore = require('schemastore')
 lspconfig.yamlls.setup({
 	settings = {
 		schemaStore = {
-        	-- You must disable built-in schemaStore support if you want to use
-        	-- this plugin and its advanced options like `ignore`.
-        	enable = false,
-        	-- Avoid TypeError: Cannot read properties of undefined (reading 'length')
-        	url = "",
-      	},
-      	schemas = schemastore.yaml.schemas({
+			-- You must disable built-in schemaStore support if you want to use
+			-- this plugin and its advanced options like `ignore`.
+			enable = false,
+			-- Avoid TypeError: Cannot read properties of undefined (reading 'length')
+			url = "",
+		},
+		schemas = schemastore.yaml.schemas({
 			select = {
 				'Helm Chart.yaml',
 				'Helm Chart.lock',
@@ -304,9 +301,9 @@ require('dap-go').setup()
 
 -- Setup auto format for terraform files
 vim.api.nvim_create_autocmd("BufWritePre", {
-	pattern = {"*.tf", "*.tfvars"},
-	callback = function ()
-		 vim.lsp.buf.format()
+	pattern = { "*.tf", "*.tfvars" },
+	callback = function()
+		vim.lsp.buf.format()
 	end
 })
 -- Run gofmt + goimport on save
@@ -326,6 +323,26 @@ vim.api.nvim_create_autocmd("FileType", {
 })
 
 -- Setup telescope
+require("telescope").setup({
+	defaults = {
+		layout_strategy = "flex",
+		layout_config = {
+			width = 0.90,
+			height = 0.95,
+			horizontal = {
+				preview_width = 0.5,
+			},
+		},
+		mappings = {
+			n = {
+				['<c-d>'] = require('telescope.actions').delete_buffer
+			},
+			i = {
+				['<c-d>'] = require('telescope.actions').delete_buffer
+			},
+		},
+	},
+})
 local builtin = require("telescope.builtin")
 
 -- Global mappings.
@@ -407,7 +424,7 @@ require('litee.gh').setup()
 
 -- setup UFO
 vim.o.foldcolumn = '1' -- '0' is not bad
-vim.o.foldlevel = 99 -- Using ufo provider need a large value, feel free to decrease the value
+vim.o.foldlevel = 99   -- Using ufo provider need a large value, feel free to decrease the value
 vim.o.foldlevelstart = 99
 vim.o.foldenable = true
 
@@ -415,21 +432,21 @@ vim.keymap.set('n', 'zR', require('ufo').openAllFolds)
 vim.keymap.set('n', 'zM', require('ufo').closeAllFolds)
 
 require('ufo').setup({
-    provider_selector = function(bufnr, filetype, buftype)
+	provider_selector = function(bufnr, filetype, buftype)
 		if filetype == "rust" then
-			return {'lsp', 'indent'}
+			return { 'lsp', 'indent' }
 		end
-        return {'treesitter', 'indent'}
-    end
+		return { 'treesitter', 'indent' }
+	end
 })
 
 -- setup neorg
-vim.api.nvim_create_autocmd({"BufEnter", "BufWinEnter"}, {
-  pattern = {"*.norg"},
-  command = "set conceallevel=3"
+vim.api.nvim_create_autocmd({ "BufEnter", "BufWinEnter" }, {
+	pattern = { "*.norg" },
+	command = "set conceallevel=3"
 })
 -- empty setup using defaults
-vim.keymap.set({'n', 'v'}, '<leader><Tab>', "[[<cmd>NvimTreeToggle<CR>]]")
+vim.keymap.set({ 'n', 'v' }, '<leader><Tab>', "[[<cmd>NvimTreeToggle<CR>]]")
 
 require('lualine').setup({
 	options = {
@@ -437,7 +454,7 @@ require('lualine').setup({
 		section_separators = '',
 	},
 	sections = {
-		lualine_a = {'mode'},
+		lualine_a = { 'mode' },
 		lualine_b = {
 			{
 				'filetype',
@@ -460,7 +477,7 @@ require('lualine').setup({
 		},
 		lualine_x = {},
 		lualine_y = {},
-		lualine_z = {'location'},
+		lualine_z = { 'location' },
 	},
 })
 
@@ -468,17 +485,17 @@ local mocha = require("catppuccin.palettes").get_palette "mocha"
 -- Setup bufferline
 local bufferline = require("bufferline")
 bufferline.setup {
-    highlights = require("catppuccin.groups.integrations.bufferline").get {
-        styles = { "italic", "bold" },
-        custom = {
-            all = {
-                fill = { bg = "#000000" },
-            },
-            mocha = {
-                background = { fg = mocha.text },
-            },
-        },
-    },
+	highlights = require("catppuccin.groups.integrations.bufferline").get {
+		styles = { "italic", "bold" },
+		custom = {
+			all = {
+				fill = { bg = "#000000" },
+			},
+			mocha = {
+				background = { fg = mocha.text },
+			},
+		},
+	},
 }
 vim.keymap.set('n', '[b', function()
 	bufferline.cycle(-1)
@@ -497,15 +514,15 @@ vim.api.nvim_set_hl(0, "NvimTreeStatusLine", { bg = mocha.base })
 vim.api.nvim_set_hl(0, "NvimTreeStatuslineNc", { fg = mocha.base, bg = mocha.base })
 
 -- Setup mappings
-vim.keymap.set({'n', 'v'}, '<C-Up>', '<C-U>')
-vim.keymap.set({'n', 'v'}, '<C-Down>', '<C-D>')
-vim.keymap.set({'n', 'v'}, '<C-Right>', 'w')
-vim.keymap.set({'n', 'v'}, '<C-Left>', 'b')
-vim.keymap.set({'n', 'v'}, '<C-S-Right>', 'W')
-vim.keymap.set({'n', 'v'}, '<C-S-Left>', 'B')
-vim.keymap.set({'n', 'v'}, '<Home>', '^')
-vim.keymap.set({'n', 'v'}, '<leader>p', '"0p')
-vim.keymap.set({'n', 'v'}, '<leader>P', '"0P')
+vim.keymap.set({ 'n', 'v' }, '<C-Up>', '<C-U>')
+vim.keymap.set({ 'n', 'v' }, '<C-Down>', '<C-D>')
+vim.keymap.set({ 'n', 'v' }, '<C-Right>', 'w')
+vim.keymap.set({ 'n', 'v' }, '<C-Left>', 'b')
+vim.keymap.set({ 'n', 'v' }, '<C-S-Right>', 'W')
+vim.keymap.set({ 'n', 'v' }, '<C-S-Left>', 'B')
+vim.keymap.set({ 'n', 'v' }, '<Home>', '^')
+vim.keymap.set({ 'n', 'v' }, '<leader>p', '"0p')
+vim.keymap.set({ 'n', 'v' }, '<leader>P', '"0P')
 
 -- DAP mappings
 vim.keymap.set('n', '<F5>', function() require('dap').continue() end)
@@ -558,7 +575,7 @@ wk.register({
 		e = "Go: iferr",
 		s = "Go: fill struct",
 	},
-}, { prefix = '<leader>'})
+}, { prefix = '<leader>' })
 wk.register({
 	[']'] = {
 		b = "next buffer in tabline",
