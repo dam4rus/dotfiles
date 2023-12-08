@@ -335,11 +335,8 @@ require("telescope").setup({
 		},
 		mappings = {
 			n = {
-				['<c-d>'] = require('telescope.actions').delete_buffer
-			},
-			i = {
-				['<c-d>'] = require('telescope.actions').delete_buffer
-			},
+				['<leader>bd'] = require('telescope.actions').delete_buffer
+			}
 		},
 	},
 })
