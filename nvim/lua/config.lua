@@ -17,6 +17,18 @@ vim.g.loaded_netrwPlugin = 1
 -- set termguicolors to enable highlight groups
 vim.opt.termguicolors = true
 
+-- vim.g.clipboard = {
+-- 	name = "xsel",
+-- 	copy = {
+-- 		["+"] = "xsel --nodetach -i -b",
+-- 		["*"] = "xsel --nodetach -i -p",
+-- 	},
+-- 	paste = {
+-- 		["+"] = "xsel -o -b",
+-- 		["*"] = "xsel -o -b",
+-- 	},
+-- 	cache_enabled = 1,
+-- }
 vim.opt.clipboard = 'unnamedplus'
 
 require("lazy").setup({
@@ -80,15 +92,9 @@ require("lazy").setup({
 	},
 	'edolphin-ydf/goimpl.nvim',
 	{
-		'simrat39/rust-tools.nvim',
-		dependencies = {
-			'neovim/nvim-lspconfig',
-			'nvim-lua/plenary.nvim',
-			'mfussenegger/nvim-dap',
-		},
-		opts = {},
-		event = { "CmdlineEnter" },
-		ft = { "rust" },
+		'mrcjkb/rustaceanvim',
+		version = '^3',
+		ft = { 'rust' },
 	},
 	'meain/vim-jsontogo',
 	{
@@ -181,6 +187,16 @@ require("lazy").setup({
 				end
 			},
 		},
+	},
+	{
+		"kylechui/nvim-surround",
+		version = "*", -- Use for stability; omit to use `main` branch for the latest features
+		event = "VeryLazy",
+		config = function()
+			require("nvim-surround").setup({
+				-- Configuration here, or leave empty to use defaults
+			})
+		end
 	},
 	"williamboman/mason.nvim",
 	"williamboman/mason-lspconfig.nvim",
@@ -416,11 +432,25 @@ vim.api.nvim_create_autocmd('LspAttach', {
 	end,
 })
 
-vim.keymap.set('n', '<leader>ff', builtin.find_files, {})
-vim.keymap.set('n', '<leader>fg', builtin.live_grep, {})
+vim.keymap.set('n', '<leader>ff', function()
+	builtin.find_files({ hidden = true })
+end)
+vim.keymap.set('n', '<leader>fg', function()
+	builtin.live_grep({
+		additional_args = {
+			"--hidden",
+		},
+	})
+end)
 vim.keymap.set('n', '<leader>fb', builtin.buffers, {})
 vim.keymap.set('n', '<leader>fh', builtin.help_tags, {})
-vim.keymap.set('n', '<leader>fi', builtin.grep_string, {})
+vim.keymap.set('n', '<leader>fi', function()
+	builtin.grep_string({
+		additional_args = {
+			"--hidden",
+		},
+	})
+end)
 vim.keymap.set('n', '<leader>fr', builtin.resume, {})
 
 require('litee.lib').setup()
