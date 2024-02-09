@@ -105,7 +105,51 @@ require("lazy").setup({
 		'aspeddro/gitui.nvim',
 		opts = {},
 	},
-	'airblade/vim-gitgutter',
+	{
+		'lewis6991/gitsigns.nvim',
+		opts = {
+			on_attach = function(bufnr)
+				local gs = package.loaded.gitsigns
+
+				local function map(mode, l, r, opts)
+					opts = opts or {}
+					opts.buffer = bufnr
+					vim.keymap.set(mode, l, r, opts)
+				end
+
+				-- Navigation
+				map('n', ']c', function()
+					if vim.wo.diff then return ']c' end
+					vim.schedule(function() gs.next_hunk() end)
+					return '<Ignore>'
+				end, { expr = true })
+
+				map('n', '[c', function()
+					if vim.wo.diff then return '[c' end
+					vim.schedule(function() gs.prev_hunk() end)
+					return '<Ignore>'
+				end, { expr = true })
+
+				-- Actions
+				map('n', '<leader>hs', gs.stage_hunk)
+				map('n', '<leader>hr', gs.reset_hunk)
+				map('v', '<leader>hs', function() gs.stage_hunk { vim.fn.line('.'), vim.fn.line('v') } end)
+				map('v', '<leader>hr', function() gs.reset_hunk { vim.fn.line('.'), vim.fn.line('v') } end)
+				map('n', '<leader>hS', gs.stage_buffer)
+				map('n', '<leader>hu', gs.undo_stage_hunk)
+				map('n', '<leader>hR', gs.reset_buffer)
+				map('n', '<leader>hp', gs.preview_hunk)
+				map('n', '<leader>hb', function() gs.blame_line { full = true } end)
+				map('n', '<leader>tb', gs.toggle_current_line_blame)
+				map('n', '<leader>hd', gs.diffthis)
+				map('n', '<leader>hD', function() gs.diffthis('~') end)
+				map('n', '<leader>td', gs.toggle_deleted)
+
+				-- Text object
+				map({ 'o', 'x' }, 'ih', ':<C-U>Gitsigns select_hunk<CR>')
+			end
+		},
+	},
 	'sindrets/diffview.nvim',
 	'nvim-lualine/lualine.nvim',
 	{ 'akinsho/bufferline.nvim', version = "*",  dependencies = 'nvim-tree/nvim-web-devicons' },
@@ -609,14 +653,31 @@ wk.register({
 		e = "Go: iferr",
 		s = "Go: fill struct",
 	},
+	h = {
+		s = "stage hunk",
+		r = "reset hunk",
+		S = "stage buffer",
+		u = "undo stage hunk",
+		R = "reset buffer",
+		p = "preview hunk",
+		b = "blame line",
+		d = "diffthis",
+		D = "diffthis",
+	},
+	t = {
+		b = "toggle line buffer",
+		d = "toggle deleted",
+	}
 }, { prefix = '<leader>' })
 wk.register({
 	[']'] = {
 		b = "next buffer in tabline",
+		c = "next hunk",
 		d = "next diagnostic",
 	},
 	['['] = {
 		b = "prev buffer in tabline",
+		c = "previous hunk",
 		d = "prev diagnostic",
 	},
 	['<space>'] = {
