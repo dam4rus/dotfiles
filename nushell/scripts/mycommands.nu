@@ -1,4 +1,4 @@
-def "extract-go-test-logs" [] {
+def "from go test log" [] {
 	let lines = $in | lines
 	let test_cases = $lines | where $it =~ '--- (?:PASS|FAIL):' | parse -r '--- (?<result>PASS|FAIL): (?<test_case>[^ ]+)'
 	mut current_test_case = null

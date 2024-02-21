@@ -107,7 +107,19 @@ $env.VISUAL = '/snap/bin/nvim'
 
 $env.REPO_PULL = (cat ~/.github_token)
 $env.NPM_TOKEN = (cat ~/.github_token)
-$env.PATH = ($env.PATH | prepend ['/snap/bin', '/home/robert/.cargo/bin', '/home/robert/go/bin'])
+$env.PATH = ($env.PATH | prepend ['/snap/bin', '/home/robert/.cargo/bin', '/home/robert/go/bin', '/home/robert/.local/bin'])
+
+$env.config = {
+  hooks: {
+    pre_prompt: [{ ||
+      if (which direnv | is-empty) {
+        return
+      }
+
+      direnv export json | from json | default {} | load-env
+    }]
+  }
+}
 
 zoxide init nushell | str replace --all "-- $rest" "-- ...$rest" | str replace --all "def-env" "def --env" | save -f ~/.zoxide.nu
 

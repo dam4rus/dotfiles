@@ -244,6 +244,11 @@ require("lazy").setup({
 	},
 	"williamboman/mason.nvim",
 	"williamboman/mason-lspconfig.nvim",
+	"LhKipp/nvim-nu",
+	{
+		"psf/black",
+		branch = "stable",
+	},
 })
 
 require('nvim-treesitter.configs').setup({
@@ -337,6 +342,7 @@ lspconfig.lua_ls.setup({
 })
 lspconfig.bashls.setup({})
 lspconfig.jsonls.setup({})
+lspconfig.pyright.setup({})
 local schemastore = require('schemastore')
 lspconfig.yamlls.setup({
 	settings = {
@@ -467,6 +473,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
 		vim.keymap.set("n", "<leader>fd", builtin.lsp_document_symbols, {})
 		vim.keymap.set("n", "<leader>fw", builtin.lsp_dynamic_workspace_symbols, {})
 		vim.keymap.set("n", "<space>d", builtin.diagnostics, {})
+		vim.keymap.set("n", "<leader>fm", [[<cmd>Telescope marks<CR>]], {})
 
 		-- Go specific mappings
 		local goiferr = require("go.iferr")

@@ -239,7 +239,13 @@ $env.config = {
     highlight_resolved_externals: false # true enables highlighting of external commands in the repl resolved by which.
 
     hooks: {
-        pre_prompt: [{ null }] # run before the prompt is shown
+        pre_prompt: [{ ||
+		    if (which direnv | is-empty) {
+                return
+			}
+
+			direnv export json | from json | default {} | load-env
+		}] # run before the prompt is shown
         pre_execution: [{ null }] # run before the repl input is run
         env_change: {
             PWD: [{|before, after| null }] # run if the PWD environment is different since the last repl input
@@ -775,8 +781,18 @@ $env.config = {
             mode: [emacs vi_insert, vi_normal]
             event: {
         		send: executehostcommand
-        		cmd: "commandline (history | each { |it| $it.command } | uniq | reverse | str join (char nl) | fzf --layout=reverse --height=40% -q (commandline) | decode utf-8 | str trim)"
+        		cmd: "commandline (history | each { |it| $it.command } | uniq | str join (char nl) | fzf --layout=reverse --height=40% -q (commandline) | decode utf-8 | str trim)"
 			}
+		}
+		{
+			name: git_switch
+			modifier: control
+			keycode: char_g
+			mode: [emacs, vi_insert, vi_normal]
+			event: [
+				{ edit: InsertString value: "git switch " }
+				{ send: menu name: completion_menu }
+			]
 		}
     ]
 }
