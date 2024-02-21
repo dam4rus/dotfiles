@@ -107,7 +107,7 @@ $env.VISUAL = '/snap/bin/nvim'
 
 $env.REPO_PULL = (cat ~/.github_token)
 $env.NPM_TOKEN = (cat ~/.github_token)
-$env.PATH = ($env.PATH | prepend ['/snap/bin', '/home/robert/.cargo/bin', '/home/robert/go/bin', '/home/robert/.local/bin'])
+$env.PATH = ($env.PATH | prepend ['/snap/bin', '~/.cargo/bin', '~/go/bin', '~/.local/bin'])
 
 $env.config = {
   hooks: {
