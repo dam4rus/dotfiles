@@ -99,8 +99,8 @@ $env.NU_PLUGIN_DIRS = [
     ($nu.default-config-dir | path join 'plugins') # add <nushell-config-dir>/plugins
 ]
 
-$env.EDITOR = '/snap/bin/nvim'
-$env.VISUAL = '/snap/bin/nvim'
+$env.EDITOR = '/usr/bin/hx'
+$env.VISUAL = '/usr/bin/hx'
 
 # To add entries to PATH (on Windows you might use Path), you can use the following pattern:
 # $env.PATH = ($env.PATH | split row (char esep) | prepend '/some/path')

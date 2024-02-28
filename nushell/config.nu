@@ -797,6 +797,8 @@ $env.config = {
     ]
 }
 
+$env.COLORTERM = truecolor
+
 source ~/.zoxide.nu
 use ~/.cache/starship/init.nu
 source ~/.cache/carapace/init.nu
