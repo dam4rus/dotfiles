@@ -6,6 +6,7 @@ set tabstop=4
 set shiftwidth=4
 set number
 set title
+set relativenumber
 
 " aunmenu PopUp.How-to\ disable\ mouse
 menu PopUp.-2- <Nop>
