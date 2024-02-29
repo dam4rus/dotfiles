@@ -31,13 +31,31 @@ require("lazy").setup({
 		},
 		opts = {},
 	},
+	{
+		'nvim-treesitter/nvim-treesitter-textobjects',
+		dependencies = {
+			'nvim-treesitter/nvim-treesitter',
+		},
+
+	},
 	'hrsh7th/cmp-nvim-lsp',
 	'hrsh7th/cmp-buffer',
 	'hrsh7th/cmp-path',
 	'hrsh7th/cmp-cmdline',
 	'hrsh7th/nvim-cmp',
 	'hrsh7th/cmp-vsnip',
-	'hrsh7th/vim-vsnip',
+	-- 'hrsh7th/vim-vsnip',
+	'saadparwaiz1/cmp_luasnip',
+	{
+		"L3MON4D3/LuaSnip",
+		-- follow latest release.
+		version = "v2.*", -- Replace <CurrentMajor> by the latest released major (first number of latest release)
+		-- install jsregexp (optional!).
+		build = "make install_jsregexp",
+		dependencies = {
+			'rafamadriz/friendly-snippets',
+		},
+	},
 	'hrsh7th/cmp-nvim-lsp-signature-help',
 	'neovim/nvim-lspconfig',
 	{
@@ -59,6 +77,7 @@ require("lazy").setup({
 		opts = {},
 		ft = { "go" },
 	},
+	'golang/vscode-go',
 	'nvim-tree/nvim-web-devicons',
 	{
 		'nvim-tree/nvim-tree.lua',
@@ -250,7 +269,61 @@ require("lazy").setup({
 require('nvim-treesitter.configs').setup({
 	highlight = {
 		enable = true,
-		disable = { "c", "rust" },
+	},
+	incremental_selection = {
+		enable = true,
+		keymaps = {
+			init_selection = "gnn", -- set to `false` to disable one of the mappings
+			node_incremental = "grn",
+			scope_incremental = "grc",
+			node_decremental = "grm",
+		},
+	},
+	textobjects = {
+		select = {
+			enable = true,
+
+			-- Automatically jump forward to textobj, similar to targets.vim
+			lookahead = true,
+			keymaps = {
+				["af"] = { query = "@function.outer", desc = "Select outer part of a function" },
+				["if"] = { query = "@function.inner", desc = "Select inner part of a function" },
+				["at"] = { query = "@class.outer", desc = "Select outer part of a class region" },
+				["it"] = { query = "@class.inner", desc = "Select inner part of a class region" },
+				["ia"] = { query = "@parameter.inner", desc = "Select inner part of a parameter" },
+			},
+			selection_modes = {
+				['@parameter.outer'] = 'v',
+				['@function.outer'] = 'V',
+				['@class.outer'] = 'V',
+			},
+		},
+		move = {
+			enable = true,
+			set_jumps = true, -- whether to set jumps in the jumplist
+			goto_next_start = {
+				["]m"] = { query = "@function.outer", desc = "Next method start" },
+				["]]"] = { query = "@class.outer", desc = "Next class start" },
+			},
+			goto_next_end = {
+				["]M"] = { query = "@function.outer", desc = "Next method end" },
+				["]["] = { query = "@class.outer", desc = "Next class end" },
+			},
+			goto_previous_start = {
+				["[m"] = { query = "@function.outer", desc = "Previous method start" },
+				["[["] = { query = "@class.outer", desc = "Previous class start" }
+			},
+			goto_previous_end = {
+				["[M"] = { query = "@function.outer", desc = "Previous method end" },
+				["[]"] = { query = "@class.outer", desc = "Previous class end" },
+			},
+			goto_next = {
+				["]a"] = { query = "@parameter.outer", desc = "Next parameter start" },
+			},
+			goto_previous = {
+				["[a"] = { query = "@parameter.outer", desc = "Next parameter start" },
+			},
+		},
 	},
 })
 
@@ -260,8 +333,8 @@ cmp.setup({
 	snippet = {
 		-- REQUIRED - you must specify a snippet engine
 		expand = function(args)
-			vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` users.
-			-- require('luasnip').lsp_expand(args.body) -- For `luasnip` users.
+			-- vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` users.
+			require('luasnip').lsp_expand(args.body) -- For `luasnip` users.
 			-- require('snippy').expand_snippet(args.body) -- For `snippy` users.
 			-- vim.fn["UltiSnips#Anon"](args.body) -- For `ultisnips` users.
 		end,
@@ -278,17 +351,17 @@ cmp.setup({
 		['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
 	}),
 	sources = cmp.config.sources({
+		-- { name = 'vsnip' }, -- For vsnip users.
+		{ name = 'luasnip' }, -- For luasnip users.
 		{ name = 'nvim_lsp' },
 		{ name = 'nvim_lsp_signature_help' },
-		{ name = 'vsnip' }, -- For vsnip users.
-		-- { name = 'luasnip' }, -- For luasnip users.
 		-- { name = 'ultisnips' }, -- For ultisnips users.
 		-- { name = 'snippy' }, -- For snippy users.
 	}, {
 		{ name = 'buffer' },
 	})
 })
-
+require("luasnip.loaders.from_vscode").lazy_load()
 -- Set configuration for specific filetype.
 cmp.setup.filetype('gitcommit', {
 	sources = cmp.config.sources({
