@@ -89,8 +89,7 @@ $env.ENV_CONVERSIONS = {
 # The default for this is $nu.default-config-dir/scripts
 $env.NU_LIB_DIRS = [
     ($nu.default-config-dir | path join 'scripts') # add <nushell-config-dir>/scripts
-	$'($env.HOME)/mycode/nu_scripts'
-	$'($env.HOME)/mycode/nu_scripts/modules/argx'
+    ($nu.default-config-dir | path join 'scripts' 'modules' 'argx') # add <nushell-config-dir>/scripts
 ]
 
 # Directories to search for plugin binaries when calling register
@@ -105,8 +104,6 @@ $env.VISUAL = '/usr/bin/hx'
 # To add entries to PATH (on Windows you might use Path), you can use the following pattern:
 # $env.PATH = ($env.PATH | split row (char esep) | prepend '/some/path')
 
-$env.REPO_PULL = (cat ~/.github_token)
-$env.NPM_TOKEN = (cat ~/.github_token)
 $env.PATH = ($env.PATH | prepend ['/snap/bin', '~/.cargo/bin', '~/go/bin', '~/.local/bin'])
 
 $env.config = {
@@ -128,3 +125,7 @@ starship init nu | save -f ~/.cache/starship/init.nu
 
 mkdir ~/.cache/carapace
 carapace _carapace nushell | str replace "carapace $spans.0 nushell $spans" "carapace $spans.0 nushell ...$spans" | save --force ~/.cache/carapace/init.nu
+
+touch ~/.local.nu
+
+

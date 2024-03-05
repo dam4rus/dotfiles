@@ -804,9 +804,11 @@ use ~/.cache/starship/init.nu
 source ~/.cache/carapace/init.nu
 source mycommands.nu
 use modules/git/git-v2.nu *
-use custom-completions/go/go.nu *
+# use custom-completions/go/go.nu *
 
 alias cat = bat --plain
 export def glo [] {
 	gl | select sha message refs
 }
+use ~/.local.nu *
+
