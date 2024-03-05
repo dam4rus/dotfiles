@@ -787,7 +787,7 @@ $env.config = {
 		{
 			name: git_switch
 			modifier: control
-			keycode: char_g
+			keycode: char_b
 			mode: [emacs, vi_insert, vi_normal]
 			event: [
 				{ edit: InsertString value: "git switch " }

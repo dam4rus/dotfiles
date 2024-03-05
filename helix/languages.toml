@@ -1,0 +1,5 @@
+[[language]]
+name = "json"
+language-servers = [{ name = "vscode-json-languageserver" }]
+formatter = { command = "prettier", args = ["--parser", "json"] }
+
