@@ -1,4 +1,4 @@
-register $home/.cargo/bin/nu_plugin_clipboard  {
+register ~/.cargo/bin/nu_plugin_clipboard  {
   "sig": {
     "name": "clipboard copy",
     "usage": "copy the input into the clipboard",

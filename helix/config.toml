@@ -4,6 +4,7 @@ theme = "catppuccin_mocha"
 line-number = "relative"
 bufferline = "multiple"
 true-color = true
+color-modes = true
 
 [editor.cursor-shape]
 normal = "block"
@@ -20,3 +21,6 @@ render = true
 
 [editor.gutters]
 layout = ["diff", "diagnostics", "line-numbers", "spacer"]
+
+[editor.soft-wrap]
+enable = true

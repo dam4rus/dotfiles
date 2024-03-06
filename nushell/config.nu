@@ -804,6 +804,7 @@ use ~/.cache/starship/init.nu
 source ~/.cache/carapace/init.nu
 source mycommands.nu
 use modules/git/git-v2.nu *
+use custom-completions/zellij/zellij-completions.nu *
 # use custom-completions/go/go.nu *
 
 alias cat = bat --plain

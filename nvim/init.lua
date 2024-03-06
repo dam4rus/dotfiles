@@ -529,7 +529,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
 		end, opts)
 		vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename, opts)
 		vim.keymap.set({ 'n', 'v' }, '<space>ca', vim.lsp.buf.code_action, opts)
-		vim.keymap.set('n', '<space>f', function()
+		vim.keymap.set('n', '<space>F', function()
 			vim.lsp.buf.format { async = true }
 		end, opts)
 		vim.keymap.set('n', '<leader>im', [[<cmd>lua require'telescope'.extensions.goimpl.goimpl{}<CR>]],
@@ -539,10 +539,10 @@ vim.api.nvim_create_autocmd('LspAttach', {
 		vim.keymap.set("n", "gi", builtin.lsp_implementations, {})
 		vim.keymap.set('n', '<space>D', builtin.lsp_type_definitions, opts)
 		vim.keymap.set("n", "gd", builtin.lsp_definitions, {})
-		vim.keymap.set("n", "<leader>fd", builtin.lsp_document_symbols, {})
-		vim.keymap.set("n", "<leader>fw", builtin.lsp_dynamic_workspace_symbols, {})
+		vim.keymap.set("n", "<space>s", builtin.lsp_document_symbols, {})
+		vim.keymap.set("n", "<space>S", builtin.lsp_dynamic_workspace_symbols, {})
 		vim.keymap.set("n", "<space>d", builtin.diagnostics, {})
-		vim.keymap.set("n", "<leader>fm", [[<cmd>Telescope marks<CR>]], {})
+		vim.keymap.set("n", "<space>m", [[<cmd>Telescope marks<CR>]], {})
 
 		-- Go specific mappings
 		local goiferr = require("go.iferr")
@@ -552,26 +552,26 @@ vim.api.nvim_create_autocmd('LspAttach', {
 	end,
 })
 
-vim.keymap.set('n', '<leader>ff', function()
+vim.keymap.set('n', '<space>f', function()
 	builtin.find_files({ hidden = true })
 end)
-vim.keymap.set('n', '<leader>fg', function()
+vim.keymap.set('n', '<space>/', function()
 	builtin.live_grep({
 		additional_args = {
 			"--hidden",
 		},
 	})
 end)
-vim.keymap.set('n', '<leader>fb', builtin.buffers, {})
-vim.keymap.set('n', '<leader>fh', builtin.help_tags, {})
-vim.keymap.set('n', '<leader>fi', function()
+vim.keymap.set('n', '<space>b', builtin.buffers, {})
+vim.keymap.set('n', '<space>h', builtin.help_tags, {})
+vim.keymap.set('n', '<space>if', function()
 	builtin.grep_string({
 		additional_args = {
 			"--hidden",
 		},
 	})
 end)
-vim.keymap.set('n', '<leader>fr', builtin.resume, {})
+vim.keymap.set('n', "<space>'", builtin.resume, {})
 
 require('litee.lib').setup()
 require('litee.gh').setup()
@@ -675,8 +675,8 @@ vim.keymap.set({ 'n', 'v' }, '<C-Left>', 'b')
 vim.keymap.set({ 'n', 'v' }, '<C-S-Right>', 'W')
 vim.keymap.set({ 'n', 'v' }, '<C-S-Left>', 'B')
 vim.keymap.set({ 'n', 'v' }, '<Home>', '^')
-vim.keymap.set({ 'n', 'v' }, '<leader>p', '"0p')
-vim.keymap.set({ 'n', 'v' }, '<leader>P', '"0P')
+vim.keymap.set({ 'n', 'v' }, '<space>p', '"0p')
+vim.keymap.set({ 'n', 'v' }, '<space>P', '"0P')
 
 -- DAP mappings
 vim.keymap.set('n', '<F5>', function() require('dap').continue() end)
@@ -715,16 +715,6 @@ wk.register({
 		f = "dap frames",
 		s = "dap scopes",
 	},
-	f = {
-		f = "find files",
-		g = "find grep",
-		b = "buffers",
-		h = "help tags",
-		i = "grep word",
-		r = "resume telescope",
-		d = "document symbols",
-		w = "workspace symbols",
-	},
 	i = {
 		e = "Go: iferr",
 		s = "Go: fill struct",
@@ -757,7 +747,8 @@ wk.register({
 		d = "prev diagnostic",
 	},
 	['<space>'] = {
-		f = "format buffer",
+		f = "find files",
+		F = "format buffer",
 		e = "open floating diagnostic",
 		q = "set location list",
 		D = "type definition",
@@ -769,8 +760,17 @@ wk.register({
 			a = "add workspace folder",
 			r = "remove workspace folder",
 			l = "list workspace folders",
-		}
-	}
+		},
+		["/"] = "find grep",
+		b = "buffers",
+		h = "help tags",
+		i = {
+			f = "grep word",
+		},
+		["'"] = "resume telescope",
+		s = "document symbols",
+		S = "workspace symbols",
+	},
 })
 
 vim.cmd('colorscheme catppuccin')

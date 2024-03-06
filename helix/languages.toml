@@ -1,5 +1,14 @@
 [[language]]
 name = "json"
-language-servers = [{ name = "vscode-json-languageserver" }]
+auto-format = false
 formatter = { command = "prettier", args = ["--parser", "json"] }
 
+[[language]]
+name = "typescript"
+formatter = { command = "prettier", args = ["--parser", "typescript"] }
+
+[language-server.gopls.config]
+buildFlags = ["-tags=integration"]
+
+[language-server.vscode-json-language-server]
+command = "vscode-json-languageserver"
