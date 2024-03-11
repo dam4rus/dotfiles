@@ -413,6 +413,8 @@ lspconfig.bashls.setup({})
 lspconfig.jsonls.setup({})
 lspconfig.pyright.setup({})
 local schemastore = require('schemastore')
+local yamlSchemas = schemastore.yaml.schemas()
+yamlSchemas['kubernetes'] = '*.yaml'
 lspconfig.yamlls.setup({
 	settings = {
 		schemaStore = {
@@ -422,15 +424,9 @@ lspconfig.yamlls.setup({
 			-- Avoid TypeError: Cannot read properties of undefined (reading 'length')
 			url = "",
 		},
-		schemas = schemastore.yaml.schemas({
-			select = {
-				'Helm Chart.yaml',
-				'Helm Chart.lock',
-				'GitHub Action',
-				'GitHub Workflow',
-				'GitHub Workflow Template Properties',
-			},
-		}),
+		yaml = {
+			schemas = yamlSchemas,
+		},
 		validate = { enable = true },
 	}
 })

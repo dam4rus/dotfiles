@@ -1,6 +1,5 @@
 [[language]]
 name = "json"
-auto-format = false
 formatter = { command = "prettier", args = ["--parser", "json"] }
 
 [[language]]
@@ -12,3 +11,6 @@ buildFlags = ["-tags=integration"]
 
 [language-server.vscode-json-language-server]
 command = "vscode-json-languageserver"
+
+[language-server.yaml-language-server.config.yaml.schemas]
+kubernetes = ["*.yaml"]
