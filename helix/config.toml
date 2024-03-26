@@ -6,6 +6,9 @@ bufferline = "multiple"
 true-color = true
 color-modes = true
 
+[editor.file-picker]
+hidden = false
+
 [editor.cursor-shape]
 normal = "block"
 insert = "bar"

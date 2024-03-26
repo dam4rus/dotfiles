@@ -1,6 +1,7 @@
 [[language]]
 name = "json"
 formatter = { command = "prettier", args = ["--parser", "json"] }
+roots = ["package.json", ".prettierrc"]
 
 [[language]]
 name = "typescript"
