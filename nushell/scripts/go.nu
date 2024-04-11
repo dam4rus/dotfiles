@@ -1,4 +1,4 @@
-def "from go test log" [] {
+export def "from go test log" [] {
 	let lines = $in | lines
 	let test_cases = $lines | where $it =~ '--- (?:PASS|FAIL):' | parse -r '--- (?<result>PASS|FAIL): (?<test_case>[^ ]+)'
 	mut current_test_case = null
@@ -35,3 +35,10 @@ def "from go test log" [] {
 	$output
 }
 
+export def --wrapped "go integration tests" [...rest] {
+	^go test -count=1 ./integration_test/ -v --tags=integration ...$rest | from go test log
+}
+
+export def --wrapped "go run tests" [...rest] {
+	^go test -count=1 -v ...$rest | from go test log
+}

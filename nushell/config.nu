@@ -777,11 +777,11 @@ $env.config = {
 		{
 		    name: fuzzy_history
             modifier: control
-        	keycode: char_r
+            keycode: char_r
             mode: [emacs vi_insert, vi_normal]
             event: {
-        		send: executehostcommand
-        		cmd: "commandline (history | each { |it| $it.command } | uniq | str join (char nl) | fzf --layout=reverse --height=40% -q (commandline) | decode utf-8 | str trim)"
+            send: executehostcommand
+        		cmd: "commandline edit -r (history | reverse | each { |it| $it.command } | uniq | str join (char nl) | fzf --layout=reverse --height=40% -q (commandline) | decode utf-8 | str trim)"
 			}
 		}
 		{
@@ -802,7 +802,7 @@ $env.COLORTERM = truecolor
 source ~/.zoxide.nu
 use ~/.cache/starship/init.nu
 source ~/.cache/carapace/init.nu
-source mycommands.nu
+use go.nu *
 use gitv2 *
 use kubernetes
 use custom-completions/zellij/zellij-completions.nu *
