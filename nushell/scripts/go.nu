@@ -1,41 +1,41 @@
 export def "from go test log" [] {
 	let lines = $in | lines
 	let test_cases = $lines | where $it =~ '--- (?:PASS|FAIL):' | parse -r '--- (?<result>PASS|FAIL): (?<test_case>[^ ]+)'
-	mut current_test_case = null
-	mut current_result = ""
-	mut current_test_case_logs = []
-	mut output = []
-	for line in $lines {
-		if $line =~ "--- (?:PASS|FAIL):" {
-			if $current_test_case != null {
-				$output = $output ++ [[test_case, result, logs]; [$current_test_case, $current_result, $current_test_case_logs]]
+	$lines
+	| reduce --fold {current: {testcase: "", result: "", log: []}, result: []} {|line, acc|
+		let add_current_test_case = {||
+		  if ($in.current.testcase != "")	{
+			  $in | update result ($in.result ++ $in.current)
+			} else {
+			  $in
 			}
-			$current_test_case = null
-			$current_result = ""
-			$current_test_case_logs = []
-			continue
-		} else if $line =~ "=== RUN " {
-			if $current_test_case != null {
-				$output = $output ++ [[test_case, result, logs]; [$current_test_case, $current_result, $current_test_case_logs]]
-			}
+		}
 
-			let test_case = $line | parse "=== RUN   {test_case}" | get test_case | get 0
-			$current_test_case = $test_case
-			$current_result = ($test_cases | where test_case == $test_case | get result | first)
-			$current_test_case_logs = []
-			continue
-		}
-		if $current_test_case != null {
-			$current_test_case_logs = ($current_test_case_logs ++ $line)
+		if ($line =~ "--- (?:PASS|FAIL):") {
+			$acc
+			| do $add_current_test_case
+			| update current {testcase: "", result: "", log: []}
+		} else if ($line =~ "=== RUN ") {
+			let test_case = $line | parse "=== RUN   {test_case}" | get test_case | first
+			let current_test_case = {
+				testcase: $test_case,
+				result: ($test_cases | where test_case == $test_case | get result | first),
+				log: [],
+			}
+		
+			$acc
+			| do $add_current_test_case
+			| update current $current_test_case
+		} else if ($acc.current.testcase != "") {
+			$acc | update current.log ($in.current.log ++ $line)
+		} else {
+			$acc
 		}
 	}
-	if $current_test_case != null {
-		$output = $output ++ [[test_case, result, logs]; [$current_test_case, $current_result, $current_test_case_logs]]
-	}
-	$output
+	| if $in.current.testcase != "" { $in.result ++ $in.current } else { $in.result }
 }
 
-export def --wrapped "go integration tests" [...rest] {
+export def --wrapped "go run integration tests" [...rest] {
 	^go test -count=1 ./integration_test/ -v --tags=integration ...$rest | from go test log
 }
 
