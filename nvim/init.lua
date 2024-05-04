@@ -18,7 +18,6 @@ vim.g.loaded_netrwPlugin = 1
 vim.opt.termguicolors = true
 vim.opt.clipboard = 'unnamedplus'
 
-
 require("lazy").setup({
 	{
 		'nvim-treesitter/nvim-treesitter',
@@ -36,7 +35,6 @@ require("lazy").setup({
 		dependencies = {
 			'nvim-treesitter/nvim-treesitter',
 		},
-
 	},
 	'hrsh7th/cmp-nvim-lsp',
 	'hrsh7th/cmp-buffer',
@@ -67,7 +65,8 @@ require("lazy").setup({
 		},
 		opts = {
 			disable_defaults = false,
-			gofmt = "gofmt"
+			gofmt = "gofmt",
+			fillstruct = 'gopls',
 		},
 		event = { "CmdlineEnter" },
 		ft = { "go", 'gomod' },
@@ -76,8 +75,10 @@ require("lazy").setup({
 		'leoluz/nvim-dap-go',
 		opts = {},
 		ft = { "go" },
+		dependencies = {
+			"nvim-neotest/nvim-nio",
+		},
 	},
-	'golang/vscode-go',
 	'nvim-tree/nvim-web-devicons',
 	{
 		'nvim-tree/nvim-tree.lua',
@@ -110,10 +111,6 @@ require("lazy").setup({
 	'meain/vim-jsontogo',
 	{
 		'numToStr/Comment.nvim',
-		opts = {},
-	},
-	{
-		'aspeddro/gitui.nvim',
 		opts = {},
 	},
 	{
@@ -194,6 +191,7 @@ require("lazy").setup({
 	},
 	{
 		"nvim-neorg/neorg",
+		version = "v7.0.0",
 		-- lazy-load on filetype
 		ft = "norg",
 		-- options for neorg. This will automatically call `require("neorg").setup(opts)`
@@ -264,8 +262,41 @@ require("lazy").setup({
 		"psf/black",
 		branch = "stable",
 	},
+	{
+		"rafaelsq/nvim-goc.lua",
+		opts = {
+			verticalSplit = false
+		}
+	},
+	{
+		"folke/flash.nvim",
+		event = "VeryLazy",
+		-- @type Flash.Config
+		opts = {},
+		-- stylua: ignore
+		keys = {
+			{ "s", mode = { "n", "x", "o" }, function() require("flash").jump() end,       desc = "Flash" },
+			{ "S", mode = { "n", "x", "o" }, function() require("flash").treesitter() end, desc = "Flash Treesitter" },
+			{ "r", mode = "o",               function() require("flash").remote() end,     desc = "Remote Flash" },
+			{
+				"R",
+				mode = { "o", "x" },
+				function() require("flash").treesitter_search() end,
+				desc =
+				"Treesitter Search"
+			},
+			{
+				"<c-s>",
+				mode = { "c" },
+				function() require("flash").toggle() end,
+				desc =
+				"Toggle Flash Search"
+			},
+		},
+	},
 })
 
+-- setup treesitter
 require('nvim-treesitter.configs').setup({
 	highlight = {
 		enable = true,
@@ -362,6 +393,7 @@ cmp.setup({
 	})
 })
 require("luasnip.loaders.from_vscode").lazy_load()
+
 -- Set configuration for specific filetype.
 cmp.setup.filetype('gitcommit', {
 	sources = cmp.config.sources({
@@ -671,8 +703,8 @@ vim.keymap.set({ 'n', 'v' }, '<C-Left>', 'b')
 vim.keymap.set({ 'n', 'v' }, '<C-S-Right>', 'W')
 vim.keymap.set({ 'n', 'v' }, '<C-S-Left>', 'B')
 vim.keymap.set({ 'n', 'v' }, '<Home>', '^')
-vim.keymap.set({ 'n', 'v' }, '<space>p', '"0p')
-vim.keymap.set({ 'n', 'v' }, '<space>P', '"0P')
+vim.keymap.set({ 'n', 'v' }, '<space>p', '"+p')
+vim.keymap.set({ 'n', 'v' }, '<space>P', '"+P')
 
 -- DAP mappings
 vim.keymap.set('n', '<F5>', function() require('dap').continue() end)
@@ -698,12 +730,35 @@ vim.keymap.set('n', '<Leader>ds', function()
 	widgets.centered_float(widgets.scopes)
 end)
 
+-- setup nvim-goc
+-- if set, when we switch between buffers, it will not split more than once. It will switch to the existing buffer instead
+vim.opt.switchbuf = 'useopen'
+
+local goc = require 'nvim-goc'
+
+vim.keymap.set('n', '<Leader>gcf', goc.Coverage, { silent = true })      -- run for the whole File
+vim.keymap.set('n', '<Leader>gct', goc.CoverageFunc, { silent = true })  -- run only for a specific Test unit
+vim.keymap.set('n', '<Leader>gcc', goc.ClearCoverage, { silent = true }) -- clear coverage highlights
+
+-- If you need custom arguments, you can supply an array as in the example below.
+-- vim.keymap.set('n', '<Leader>gcf', function() goc.Coverage({ "-race", "-count=1" }) end, {silent=true})
+-- vim.keymap.set('n', '<Leader>gct', function() goc.CoverageFunc({ "-race", "-count=1" }) end, {silent=true})
+
+vim.keymap.set('n', ']a', goc.Alternate, { silent = true })
+vim.keymap.set('n', '[a', goc.AlternateSplit, { silent = true }) -- set verticalSplit=true for vertical
+
+-- default colors
+-- vim.api.nvim_set_hl(0, 'GocNormal', {link='Comment'})
+-- vim.api.nvim_set_hl(0, 'GocCovered', {link='String'})
+-- vim.api.nvim_set_hl(0, 'GocUncovered', {link='Error'})
+
 -- which-key registrations
 local wk = require('which-key')
 wk.register({
 	b = "toggle breakpoint",
 	B = "set breakpoint",
 	d = {
+		name = "dap",
 		r = "open repl",
 		l = "run last",
 		h = "dap hover",
@@ -712,10 +767,12 @@ wk.register({
 		s = "dap scopes",
 	},
 	i = {
+		name = "insert snippet",
 		e = "Go: iferr",
 		s = "Go: fill struct",
 	},
 	h = {
+		name = "git hunk",
 		s = "stage hunk",
 		r = "reset hunk",
 		S = "stage buffer",
@@ -727,9 +784,19 @@ wk.register({
 		D = "diffthis",
 	},
 	t = {
+		name = "toggle",
 		b = "toggle line buffer",
 		d = "toggle deleted",
-	}
+	},
+	g = {
+		name = "Go",
+		c = {
+			name = "coverage",
+			f = "file coverage",
+			t = "test func coverage",
+			c = "clean coverage",
+		},
+	},
 }, { prefix = '<leader>' })
 wk.register({
 	[']'] = {
@@ -777,3 +844,4 @@ vim.opt.shiftwidth = 4
 vim.opt.number = true
 vim.opt.title = true
 vim.opt.relativenumber = true
+vim.opt.scrolloff = 5

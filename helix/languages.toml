@@ -1,7 +1,6 @@
 [[language]]
 name = "json"
 formatter = { command = "prettier", args = ["--parser", "json"] }
-roots = ["package.json", ".prettierrc"]
 
 [[language]]
 name = "typescript"
@@ -13,5 +12,3 @@ buildFlags = ["-tags=integration"]
 [language-server.vscode-json-language-server]
 command = "vscode-json-languageserver"
 
-[language-server.yaml-language-server.config.yaml.schemas]
-kubernetes = ["*.yaml"]
