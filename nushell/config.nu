@@ -809,8 +809,8 @@ use custom-completions/zellij/zellij-completions.nu *
 # use custom-completions/go/go.nu *
 
 alias cat = bat --plain
+alias .j = just --justfile ~/.user.justfile --working-directory .
 export def glo [] {
 	gl | select sha message refs
 }
 use ~/.local.nu *
-
