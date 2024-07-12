@@ -216,8 +216,6 @@ require("lazy").setup({
 		'folke/which-key.nvim',
 		opts = {},
 	},
-	'ldelossa/litee.nvim',
-	'ldelossa/gh.nvim',
 	'b0o/schemastore.nvim',
 	'kevinhwang91/promise-async',
 	'kevinhwang91/nvim-ufo',
@@ -294,6 +292,16 @@ require("lazy").setup({
 			},
 		},
 	},
+	{
+'pwntester/octo.nvim',
+  dependencies = {
+    'nvim-lua/plenary.nvim',
+    'nvim-telescope/telescope.nvim',
+    -- OR 'ibhagwan/fzf-lua',
+    'nvim-tree/nvim-web-devicons',
+  },
+  opts = {},
+  }
 })
 
 -- setup treesitter
@@ -557,7 +565,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
 		end, opts)
 		vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename, opts)
 		vim.keymap.set({ 'n', 'v' }, '<space>ca', vim.lsp.buf.code_action, opts)
-		vim.keymap.set('n', '<space>F', function()
+		vim.keymap.set('n', '<space>bF', function()
 			vim.lsp.buf.format { async = true }
 		end, opts)
 		vim.keymap.set('n', '<leader>im', [[<cmd>lua require'telescope'.extensions.goimpl.goimpl{}<CR>]],
@@ -567,8 +575,19 @@ vim.api.nvim_create_autocmd('LspAttach', {
 		vim.keymap.set("n", "gi", builtin.lsp_implementations, {})
 		vim.keymap.set('n', '<space>D', builtin.lsp_type_definitions, opts)
 		vim.keymap.set("n", "gd", builtin.lsp_definitions, {})
-		vim.keymap.set("n", "<space>s", builtin.lsp_document_symbols, {})
-		vim.keymap.set("n", "<space>S", builtin.lsp_dynamic_workspace_symbols, {})
+		vim.keymap.set("n", "<space>s", function()
+			builtin.lsp_document_symbols({
+				symbol_width = 0.8,
+				symbol_type_width = 0.2,
+			})
+		end, {})
+		vim.keymap.set("n", "<space>S", function()
+			builtin.lsp_dynamic_workspace_symbols({
+				fname_width = 0.3,
+				symbol_width = 0.5,
+				symbol_type_width = 0.2,
+			})
+		end, {})
 		vim.keymap.set("n", "<space>d", builtin.diagnostics, {})
 		vim.keymap.set("n", "<space>m", [[<cmd>Telescope marks<CR>]], {})
 
@@ -600,9 +619,6 @@ vim.keymap.set('n', '<space>if', function()
 	})
 end)
 vim.keymap.set('n', "<space>'", builtin.resume, {})
-
-require('litee.lib').setup()
-require('litee.gh').setup()
 
 -- setup UFO
 vim.o.foldcolumn = '1' -- '0' is not bad
