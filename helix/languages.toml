@@ -1,4 +1,8 @@
 [[language]]
+name = "go"
+rulers = [120]
+
+[[language]]
 name = "json"
 formatter = { command = "prettier", args = ["--parser", "json"] }
 
@@ -6,9 +10,19 @@ formatter = { command = "prettier", args = ["--parser", "json"] }
 name = "typescript"
 formatter = { command = "prettier", args = ["--parser", "typescript"] }
 
+[[language]]
+name = "python"
+language-servers = [ "pyright" ]
+formatter = { command = "black", args = ["-"] }
+auto-format = true
+rulers = [80, 88]
+
 [language-server.gopls.config]
 buildFlags = ["-tags=integration"]
 
 [language-server.vscode-json-language-server]
 command = "vscode-json-languageserver"
 
+[[language]]
+name = "elixir"
+auto-format = true

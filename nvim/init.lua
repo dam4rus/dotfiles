@@ -227,6 +227,7 @@ require("lazy").setup({
 					local nvim_tree = require('nvim-tree.api')
 					nvim_tree.tree.close()
 					require("dapui").close()
+					vim.cmd("DiffviewClose")
 				end
 			},
 			post_save_cmds = {
