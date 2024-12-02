@@ -12,7 +12,7 @@ formatter = { command = "prettier", args = ["--parser", "typescript"] }
 
 [[language]]
 name = "python"
-language-servers = [ "pyright" ]
+language-servers = [ "pyright", "pylsp" ]
 formatter = { command = "black", args = ["-"] }
 auto-format = true
 rulers = [80, 88]
@@ -26,3 +26,16 @@ command = "vscode-json-languageserver"
 [[language]]
 name = "elixir"
 auto-format = true
+
+# [language-server.rust-analyzer.config.procMacro.ignored]
+# leptos_macro = [
+#     # Optional:
+#     "component",
+#     "server"
+# ]
+
+# [language-server.rust-analyzer.config.cargo]
+# features = ["ssr"]
+
+# [language-server.rust-analyzer.config.check]
+# features = ["ssr"]
